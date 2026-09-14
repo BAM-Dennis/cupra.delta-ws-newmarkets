@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CONTENT, ROUNDS } from "@/data/content";
 import { GAME_CONFIG } from "../config";
-import { GameError, cardMatchesNeed, handsOf, initialState, openHands, reduce } from "../game";
+import { GameError, cardMatchesNeed, handsOf, initialState, matchStrength, openHands, reduce } from "../game";
 import { seededRng } from "../rng";
 import type { Action, Context, GroupState, Member } from "../types";
 
@@ -103,7 +103,8 @@ describe("Konsens-Spielzug (D2–D5)", () => {
     const need = CONTENT.personas.find((p) => p.id === "p-sofia")!.needs[0];
     const own = handsOf(s, "u1");
     const card = own.find((h) => cardMatchesNeed(CONTENT, h.cardId, need.id)) ?? own[0];
-    const hit = cardMatchesNeed(CONTENT, card.cardId, need.id);
+    const strength = matchStrength(CONTENT, card.cardId, need.id);
+    const hit = strength !== "none";
 
     const pending = reduce(s, { type: "PROPOSE_CARD", userId: "u1", cardId: card.cardId }, ctx());
     expect(pending.hands.find((h) => h.cardId === card.cardId)?.state).toBe("open");
@@ -112,10 +113,12 @@ describe("Konsens-Spielzug (D2–D5)", () => {
     expect(played.hands.find((h) => h.cardId === card.cardId)?.state).toBe("played");
     expect(played.moves).toHaveLength(1);
     expect(played.moves[0].hit).toBe(hit);
-    expect(played.score).toBe(hit ? GAME_CONFIG.HIT_POINTS : 0);
+    expect(played.moves[0].strength).toBe(strength);
+    const expected = strength === "none" ? 0 : GAME_CONFIG.HIT_POINTS[strength];
+    expect(played.score).toBe(expected);
     if (hit) {
-      expect(played.memberPoints.u1).toBe(GAME_CONFIG.HIT_POINTS + GAME_CONFIG.CONTRIBUTOR_BONUS);
-      expect(played.memberPoints.u2).toBe(GAME_CONFIG.HIT_POINTS);
+      expect(played.memberPoints.u1).toBe(expected + GAME_CONFIG.CONTRIBUTOR_BONUS);
+      expect(played.memberPoints.u2).toBe(expected);
     }
     expect(() => reduce(played, { type: "PROPOSE_CARD", userId: "u1", cardId: card.cardId }, ctx())).toThrowError(expect.objectContaining({ code: "CARD_SPENT" }));
   });
@@ -160,9 +163,9 @@ describe("Spielende und Wertung (E1–E3)", () => {
     expect(openHands(s)).toHaveLength(0);
     expect(s.moves).toHaveLength(GAME_CONFIG.DECK_SIZE);
     expect(s.outcomes).toHaveLength(ROUNDS.length);
-    const hits = s.moves.filter((m) => m.hit).length;
+    const hitPoints = s.moves.reduce((sum, m) => sum + m.points, 0);
     const bonus = s.outcomes.reduce((sum, o) => sum + o.bonusPoints, 0);
-    expect(s.score).toBe(hits * GAME_CONFIG.HIT_POINTS + bonus);
+    expect(s.score).toBe(hitPoints + bonus);
     expect(s.convincedCount).toBe(s.outcomes.filter((o) => o.convinced).length);
     for (const o of s.outcomes) {
       if (o.convinced) expect(o.bonusPoints).toBe(GAME_CONFIG.CONVINCED_BONUS[o.difficulty]);
@@ -184,7 +187,38 @@ describe("Spielende und Wertung (E1–E3)", () => {
   });
 });
 
-describe("Demo-Content: Balance-Regel volle Abdeckung (Abschnitt 8)", () => {
+describe("Abgestufte Treffer (Seed-Content)", () => {
+  it("bewertet voll, Teil und kein Treffer unterschiedlich", () => {
+    // Seed: Karte 4 "Efficient by design" trifft Sofias S2 nur teilweise, Henriks H1 voll
+    expect(matchStrength(CONTENT, "c04", "S2")).toBe("partial");
+    expect(matchStrength(CONTENT, "c04", "H1")).toBe("full");
+    expect(matchStrength(CONTENT, "c04", "S1")).toBe("none");
+    expect(GAME_CONFIG.HIT_POINTS.partial).toBeLessThan(GAME_CONFIG.HIT_POINTS.full);
+  });
+
+  it("Timing-Pivot: Smart value trifft Sofia, Henrik und Mika voll", () => {
+    for (const need of ["S2", "H1", "M2"]) expect(matchStrength(CONTENT, "c03", need)).toBe("full");
+  });
+});
+
+describe("Seed-Content: Balance-Regel volle Abdeckung (Abschnitt 8)", () => {
+  it("jede Karte hat über alle Runden mindestens einen vollen Treffer", () => {
+    for (const card of CONTENT.cards) {
+      const full = CONTENT.cardNeedMap.some((e) => e.cardId === card.id && e.strength === "full");
+      expect(full, `Karte ${card.id} hat keinen vollen Moment`).toBe(true);
+    }
+  });
+
+  it("jeder Need verweist auf eine existierende Persona und jede Karte der Zuordnung existiert", () => {
+    const needIds = new Set(CONTENT.personas.flatMap((p) => p.needs.map((n) => n.id)));
+    const cardIds = new Set(CONTENT.cards.map((c) => c.id));
+    for (const e of CONTENT.cardNeedMap) {
+      expect(needIds.has(e.needId), `Need ${e.needId} unbekannt`).toBe(true);
+      expect(cardIds.has(e.cardId), `Karte ${e.cardId} unbekannt`).toBe(true);
+    }
+    expect(needIds.size).toBe(CONTENT.personas.length * GAME_CONFIG.NEEDS_PER_PERSONA);
+  });
+
   it("jede Karte passt auf mindestens einen Need in jeder Runde, egal welche Persona gewählt wird", () => {
     for (const card of CONTENT.cards) {
       const coverage = ROUNDS.map((r) =>

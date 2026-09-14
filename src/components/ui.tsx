@@ -79,11 +79,12 @@ export function Overline({ children, className = "" }: { children: ReactNode; cl
   return <p className={`text-[10px] font-medium uppercase leading-[1.2] tracking-[1px] ${className}`}>{children}</p>;
 }
 
-const BADGE: Record<"teal" | "copper" | "neutral" | "correct" | "signal", string> = {
+const BADGE: Record<"teal" | "copper" | "neutral" | "correct" | "warn" | "signal", string> = {
   teal: "bg-teal-tint border border-teal/60 text-white",
   copper: "bg-copper/20 border border-copper text-white",
   neutral: "bg-white/10 border border-white/10 text-white/70",
   correct: "bg-correct/25 border border-correct text-white",
+  warn: "bg-warn/25 border border-warn text-white",
   signal: "bg-signal/25 border border-signal text-white",
 };
 

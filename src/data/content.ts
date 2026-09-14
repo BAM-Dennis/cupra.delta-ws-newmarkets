@@ -1,64 +1,52 @@
 /**
- * DEMO-INHALT für den Prototyp. Die echten Argumentkarten, Personas, Needs und die
- * Karte-Need-Zuordnung kommen von SAPERED und CUPRA (Abschnitt 12 des Konzepts).
+ * Seed-Content für Workshop 3 "New Market Segment" nach
+ * SAPERED_Workshop-App_SeedContent_WS3_NewMarketSegment.md (Stand 14.09.2026).
  *
- * Die Zuordnung wird hier aus Tags erzeugt, damit die Balance-Regel "volle Abdeckung"
- * (Abschnitt 8) im Demo-Content leicht prüfbar bleibt. Die Engine selbst arbeitet
- * ausschließlich mit der expliziten CardNeedMap.
+ * Platzhalter-Inhalt von SAPERED, gegroundet auf öffentlicher CUPRA-Raval-Recherche,
+ * final bestätigt CUPRA. Werte auf Englisch, weil sie in der App erscheinen.
+ *
+ * Runden 1 und 2 (Sofia/Henrik, Mika/Familie Ruiz) sowie die Karte-Need-Zuordnung mit
+ * Treffer-Stärke sind 1:1 aus dem Seed übernommen. Runden 3 und 4 sind im Seed bewusst
+ * offen ("mit CUPRA zu bauen"); hier stehen klar markierte PLATZHALTER entlang der zwei
+ * im Seed vorgeschlagenen Persona-Typen (werteorientiert, Lifestyle/Outdoor), damit das
+ * 12-Karten-Deck spielbar und voll abgedeckt bleibt. Siehe PLACEHOLDER_ROUNDS unten.
  */
-import type { ArgumentCardDef, ContentPack, PersonaDef, RoundDef } from "@/engine/types";
+import type { ArgumentCardDef, CardNeedEntry, ContentPack, PersonaDef, RoundDef } from "@/engine/types";
 
-type Tag =
-  | "design"
-  | "performance"
-  | "electric"
-  | "range"
-  | "value"
-  | "family"
-  | "tech"
-  | "service"
-  | "community"
-  | "sustainability"
-  | "experience"
-  | "heritage";
+/* ---------- Das 12-Karten-Deck (Delta-verankert) ---------- */
 
-interface TaggedCard extends ArgumentCardDef {
-  tags: Tag[];
-}
-
-interface TaggedPersona extends Omit<PersonaDef, "needs"> {
-  needs: Array<{ id: string; text: string; tags: Tag[] }>;
-}
-
-const CARDS: TaggedCard[] = [
-  { id: "c01", title: "Design-led brand", text: "CUPRA is a design-first brand: expressive lines, copper accents and a look that stands out without shouting.", tags: ["design", "experience"] },
-  { id: "c02", title: "Electrified performance", text: "Every CUPRA feels alive: e-HYBRID and full-electric powertrains combine instant torque with everyday efficiency.", tags: ["performance", "electric"] },
-  { id: "c03", title: "Tavascan: fully electric", text: "The Tavascan delivers up to 550 km of range and 135 kW fast charging, 10 to 80 percent in under 30 minutes.", tags: ["electric", "range"] },
-  { id: "c04", title: "CUPRA Garage experience", text: "CUPRA City Garages and Garage Lounges turn the dealership into a brand space with events, coffee and expert advice.", tags: ["experience", "community"] },
-  { id: "c05", title: "CUPRA Tribe", text: "Owners join the CUPRA Tribe: track days, meet-ups and a community that shares the same mindset.", tags: ["community", "experience"] },
-  { id: "c06", title: "Smart value", text: "Premium feel, honest pricing: strong standard equipment and attractive leasing and business rates.", tags: ["value"] },
-  { id: "c07", title: "Terramar for the family", text: "The Terramar offers 5 seats, up to 642 litres of boot space and 5-star Euro NCAP safety, ready for family life.", tags: ["family"] },
-  { id: "c08", title: "Connected cockpit", text: "12.9 inch infotainment, wireless CarPlay and Android Auto, over-the-air updates and a digital key on your phone.", tags: ["tech"] },
-  { id: "c09", title: "Worry-free ownership", text: "Up to 5 years warranty, service packages and an 8-year battery guarantee keep total cost predictable.", tags: ["service", "value"] },
-  { id: "c10", title: "Conscious materials", text: "Seats made from recycled SEAQUAL yarn, bio-based dashboards and CO2-neutral delivery for electric models.", tags: ["sustainability", "design"] },
-  { id: "c11", title: "Motorsport DNA", text: "Born in racing: TCR titles, Extreme E and the fully electric CUPRA e-Racer feed straight into every road car.", tags: ["heritage", "performance"] },
-  { id: "c12", title: "Charging made simple", text: "One app, one card, 600,000 charge points across Europe, plus a home wallbox package with installation.", tags: ["range", "service", "electric"] },
+const CARDS: ArgumentCardDef[] = [
+  { id: "c01", title: "Design-led challenger", text: "A design-first look: expressive lines, copper accents, stands out without shouting." },
+  { id: "c02", title: "Connected cockpit", text: "12.9-inch responsive infotainment, wireless CarPlay and Android Auto, over-the-air updates, phone as digital key." },
+  { id: "c03", title: "Smart value", text: "Premium feel, honest pricing from around 26,000 euros, strong standard equipment, attractive leasing and business rates." },
+  { id: "c04", title: "Efficient by design", text: "Around 161 Wh/km, low cost per kilometre." },
+  { id: "c05", title: "Everyday range", text: "Around 310 km real range, up to about 446 km WLTP on the larger battery." },
+  { id: "c06", title: "Charging made simple", text: "10 to 80 percent in around 24 minutes, a large European charging network, home wallbox package with installation." },
+  { id: "c07", title: "Worry-free ownership", text: "Up to 5 years warranty, service packages and an 8-year battery guarantee keep total cost predictable." },
+  { id: "c08", title: "Class-leading boot", text: "Around 441 litres, flat load floor, folding rear seats." },
+  { id: "c09", title: "Real cabin space", text: "Long 2599 mm wheelbase, genuine rear-seat room, wide door openings." },
+  { id: "c10", title: "Alive to drive", text: "Supportive driver-focused seat, instant electric torque, everyday agility." },
+  { id: "c11", title: "Conscious materials", text: "Recycled SEAQUAL yarn seats, bio-based surfaces, lower-impact production." },
+  { id: "c12", title: "Power out (V2L)", text: "Run your devices straight from the car." },
 ];
 
-const PERSONAS: TaggedPersona[] = [
+/* ---------- Personas Runde 1 und 2 (aus dem Seed) ---------- */
+
+const SEED_PERSONAS: PersonaDef[] = [
   {
     id: "p-sofia",
     name: "Sofia",
-    role: "Urban professional, 34, first premium car",
+    profile: "Urban professional, 34, first premium car, coming from a small hatchback",
     difficulty: "easy",
     intro: "I have been driving a small hatchback for years. Now I want something that feels special, but I do not want to overspend.",
     needs: [
-      { id: "n-sofia-1", text: "I want a car that looks different from what everyone else drives.", tags: ["design"] },
-      { id: "n-sofia-2", text: "My budget is limited. What do I actually get for my money?", tags: ["value"] },
-      { id: "n-sofia-3", text: "I live in the city. Is going electric realistic for me?", tags: ["electric", "range"] },
+      { id: "S1", label: "S1", text: "I want something that feels special, a real step up." },
+      { id: "S2", label: "S2", text: "It has to stay affordable. I do not want to overspend." },
+      { id: "S3", label: "S3", text: "And it has to be easy to live with day to day." },
     ],
     reactions: {
-      hit: ["Okay, that is exactly what I was hoping to hear.", "Nice, I did not expect that from a brand I barely knew."],
+      full: ["Okay, that is exactly what I was hoping to hear.", "Nice, I did not expect that from a brand I barely knew."],
+      partial: ["That helps a bit, but it is not the whole answer.", "Fair point, though it is not quite what I asked."],
       miss: ["Hm, that is not really what I asked about.", "Interesting, but it does not solve my question."],
     },
     convinced: "You got me. Where do I sign?",
@@ -67,159 +55,221 @@ const PERSONAS: TaggedPersona[] = [
   {
     id: "p-henrik",
     name: "Henrik",
-    role: "Fleet manager, 52, 120 company cars",
+    profile: "Fleet manager, 52, responsible for 120 company cars, decides rationally",
     difficulty: "hard",
     intro: "I decide by spreadsheet. Emotions do not pay my budget. Convince me on numbers and reliability.",
     needs: [
-      { id: "n-henrik-1", text: "Total cost of ownership is everything. How predictable are your running costs?", tags: ["service", "value"] },
-      { id: "n-henrik-2", text: "My drivers cover long distances. Charging downtime is a real cost for me.", tags: ["range"] },
-      { id: "n-henrik-3", text: "Our board has a sustainability target. Can you back that up with facts?", tags: ["sustainability"] },
+      { id: "H1", label: "H1", text: "Total cost of ownership has to be predictable." },
+      { id: "H2", label: "H2", text: "My drivers cover long distances. Charging downtime is a real cost." },
+      { id: "H3", label: "H3", text: "I need reliability and a warranty I can count on." },
     ],
     reactions: {
-      hit: ["That is a number I can put in my report.", "Good. That addresses a real risk on my list."],
+      full: ["That is a number I can put in my report.", "Good. That addresses a real risk on my list."],
+      partial: ["Partly useful. I would need more than that to sign off.", "That is a start, not a business case."],
       miss: ["I do not see how that helps my fleet.", "Marketing. Give me something I can calculate."],
     },
     convinced: "Send me a fleet proposal for 20 units to start.",
     notConvinced: "Not enough. We stay with our current supplier for now.",
   },
   {
-    id: "p-marco",
-    name: "Marco",
-    role: "Young family, 41, replacing an old SUV",
+    id: "p-mika",
+    name: "Mika",
+    profile: "22, first own car, the car is a statement",
     difficulty: "easy",
-    intro: "Two kids, one dog and a lot of luggage. The car needs to work for us every single day.",
+    intro: "My first car has to look like me. It should stand out, still be affordable, and be fun to drive.",
     needs: [
-      { id: "n-marco-1", text: "Space and safety come first. Will everyone and everything fit?", tags: ["family"] },
-      { id: "n-marco-2", text: "I do not want to lose money on repairs when the kids are teenagers.", tags: ["service"] },
-      { id: "n-marco-3", text: "Honestly, I still want to enjoy driving once the kids are asleep.", tags: ["performance"] },
+      { id: "M1", label: "M1", text: "It has to stand out and look sharp." },
+      { id: "M2", label: "M2", text: "It has to be affordable for a first car." },
+      { id: "M3", label: "M3", text: "I want fun and character, not just transport." },
     ],
     reactions: {
-      hit: ["That makes family life easier. I like it.", "Perfect, my partner will love that argument."],
-      miss: ["Sounds nice, but that is not my daily problem.", "I am not sure the kids care about that."],
+      full: ["Yes! That is what I mean.", "Okay, that is actually cool."],
+      partial: ["Kind of, but it is not the main thing for me.", "Nice detail. Not sure it changes my mind, though."],
+      miss: ["That sounds like something my parents would care about.", "Meh. Not why I want a car."],
     },
-    convinced: "Let us book a test drive for the weekend, with the whole family.",
-    notConvinced: "We will keep looking. Practicality wins for us.",
+    convinced: "Alright, I am in. Which colour comes with the copper details?",
+    notConvinced: "I like the vibe, but I am not feeling it yet.",
   },
   {
-    id: "p-aiko",
-    name: "Aiko",
-    role: "Tech early adopter, 29, skeptical of legacy brands",
+    id: "p-ruiz",
+    name: "Familie Ruiz",
+    profile: "Young family, switching to electric for the first time, cautious",
     difficulty: "hard",
-    intro: "I compare cars like gadgets. If the software is old, the car is old. Surprise me.",
+    intro: "We are switching to electric for the first time. It has to fit the family kit, take us on longer trips without stress, and be safe.",
     needs: [
-      { id: "n-aiko-1", text: "How smart is the car really? Updates, apps, integration?", tags: ["tech"] },
-      { id: "n-aiko-2", text: "Charging is the make or break. How seamless is your ecosystem?", tags: ["range", "electric"] },
-      { id: "n-aiko-3", text: "Every brand claims to be sustainable. Prove it with the actual product.", tags: ["sustainability"] },
+      { id: "F1", label: "F1", text: "We need space for the whole family kit." },
+      { id: "F2", label: "F2", text: "Enough real range for longer trips, without anxiety." },
+      { id: "F3", label: "F3", text: "It has to be safe and dependable." },
     ],
     reactions: {
-      hit: ["Okay, that is genuinely a modern answer.", "Not bad. That is on the level of the newcomers."],
-      miss: ["That is legacy-brand talk.", "You are not answering the actual question."],
+      full: ["That takes a real worry off our list.", "Good, that is the kind of thing we need to hear."],
+      partial: ["Okay, that helps a little, but we are still nervous about it.", "That is something, but not quite reassuring yet."],
+      miss: ["Nice, but that is not what keeps us up at night.", "That does not answer our question about switching."],
     },
-    convinced: "Alright, you are on my shortlist. Send me the configurator link.",
-    notConvinced: "I will probably go with a pure EV startup.",
-  },
-  {
-    id: "p-lena",
-    name: "Lena",
-    role: "Design and lifestyle enthusiast, 26",
-    difficulty: "easy",
-    intro: "A car is part of my style. I want to feel something when I look at it and when I talk about it.",
-    needs: [
-      { id: "n-lena-1", text: "Tell me about the design language. What makes it recognisable?", tags: ["design"] },
-      { id: "n-lena-2", text: "I care about how things are made. What about materials?", tags: ["sustainability", "design"] },
-      { id: "n-lena-3", text: "Buying a car should feel like an experience, not a transaction.", tags: ["experience"] },
-    ],
-    reactions: {
-      hit: ["Yes, that is exactly the vibe I am looking for.", "Love that. That is a story I can tell my friends."],
-      miss: ["That is a bit too rational for me.", "Hm, that does not really speak to me."],
-    },
-    convinced: "I am in. Which colour has the copper accents?",
-    notConvinced: "It is nice, but it does not move me.",
-  },
-  {
-    id: "p-raj",
-    name: "Raj",
-    role: "Long-distance commuter, 45, 40,000 km a year",
-    difficulty: "hard",
-    intro: "I spend three hours a day on the motorway. Range, comfort and reliability are non-negotiable.",
-    needs: [
-      { id: "n-raj-1", text: "Range anxiety is real for me. What is the honest range on the motorway?", tags: ["range"] },
-      { id: "n-raj-2", text: "If something breaks I lose a working day. How do you protect me from that?", tags: ["service"] },
-      { id: "n-raj-3", text: "I stopped believing in fast charging promises. Convince me.", tags: ["range", "electric"] },
-    ],
-    reactions: {
-      hit: ["That is the kind of concrete answer I need.", "Good. That would change my daily routine for the better."],
-      miss: ["Nice, but irrelevant on the motorway at six in the morning.", "That does not reduce my kilometres."],
-    },
-    convinced: "Fine. Let us calculate a lease with a wallbox.",
-    notConvinced: "I will stay with diesel for another cycle.",
-  },
-  {
-    id: "p-tom",
-    name: "Tom",
-    role: "Hot hatch fan, 38, weekend driver",
-    difficulty: "easy",
-    intro: "I grew up with fast hatchbacks. I want a car with character and a proper story behind it.",
-    needs: [
-      { id: "n-tom-1", text: "Does the brand actually have racing credibility?", tags: ["heritage"] },
-      { id: "n-tom-2", text: "How does it feel to drive? Numbers are fine, emotion is better.", tags: ["performance"] },
-      { id: "n-tom-3", text: "I want to meet people who drive the same thing.", tags: ["community"] },
-    ],
-    reactions: {
-      hit: ["Now we are talking!", "That is the kind of stuff I want to hear."],
-      miss: ["Yawn. Tell me something exciting.", "That is not why I buy a car."],
-    },
-    convinced: "Sold. When is the next track day?",
-    notConvinced: "Cool brand, but I am not feeling it yet.",
-  },
-  {
-    id: "p-isabel",
-    name: "Isabel",
-    role: "Premium-brand loyalist, 58, third German premium car",
-    difficulty: "hard",
-    intro: "I have driven German premium for 25 years. Why would I switch to a brand I have never considered?",
-    needs: [
-      { id: "n-isabel-1", text: "Premium is about the experience around the car. What does your brand offer?", tags: ["experience"] },
-      { id: "n-isabel-2", text: "I expect a certain level of technology and refinement.", tags: ["tech", "design"] },
-      { id: "n-isabel-3", text: "I am paying a lot. Convince me the value is really there.", tags: ["value"] },
-    ],
-    reactions: {
-      hit: ["I admit, that is on par with what I am used to.", "That is a fair point. Go on."],
-      miss: ["My current brand does that better.", "That does not justify a switch."],
-    },
-    convinced: "You surprised me. Arrange a comparison drive.",
-    notConvinced: "Thank you, but I will stay where I am.",
+    convinced: "Let us book a test drive for the weekend, with the kids.",
+    notConvinced: "We are not ready yet. Maybe next year.",
   },
 ];
 
-/** C1/Annahme: Alle Gruppen treffen in jeder Runde dasselbe Persona-Paar. */
+/* ---------- Karte-Need-Zuordnung mit Treffer-Stärke (aus dem Seed) ---------- */
+
+const SEED_MAP: CardNeedEntry[] = [
+  { cardId: "c01", needId: "S1", strength: "full" },
+  { cardId: "c01", needId: "M1", strength: "full" },
+  { cardId: "c02", needId: "S3", strength: "full" },
+  { cardId: "c02", needId: "M3", strength: "partial" },
+  { cardId: "c03", needId: "S2", strength: "full" },
+  { cardId: "c03", needId: "H1", strength: "full" },
+  { cardId: "c03", needId: "M2", strength: "full" },
+  { cardId: "c04", needId: "S2", strength: "partial" },
+  { cardId: "c04", needId: "H1", strength: "full" },
+  { cardId: "c05", needId: "H2", strength: "partial" },
+  { cardId: "c05", needId: "F2", strength: "full" },
+  { cardId: "c06", needId: "H2", strength: "full" },
+  { cardId: "c06", needId: "F2", strength: "full" },
+  { cardId: "c07", needId: "H3", strength: "full" },
+  { cardId: "c07", needId: "H1", strength: "partial" },
+  { cardId: "c07", needId: "F3", strength: "full" },
+  { cardId: "c08", needId: "F1", strength: "full" },
+  { cardId: "c09", needId: "F1", strength: "full" },
+  { cardId: "c10", needId: "S1", strength: "partial" },
+  { cardId: "c10", needId: "M3", strength: "full" },
+  { cardId: "c11", needId: "S1", strength: "partial" },
+  { cardId: "c11", needId: "M1", strength: "partial" },
+  { cardId: "c12", needId: "M3", strength: "partial" },
+];
+
+/* ---------- PLATZHALTER Runden 3 und 4 (im Seed offen, mit CUPRA zu bauen) ---------- */
+/* Typ "werteorientierte Käuferin" gibt Karte 11 ihren vollen Moment, Typ "Lifestyle/Outdoor"
+   gibt Karte 12 ihren vollen Moment. Namen, Needs und Zuordnung sind Vorschläge des Developers. */
+
+const PLACEHOLDER_PERSONAS: PersonaDef[] = [
+  {
+    id: "p-noor",
+    name: "Noor",
+    profile: "Conscious consumer, 31, buys brands that match her values (placeholder)",
+    difficulty: "easy",
+    placeholder: true,
+    intro: "I want a car I can feel good about. How it is made matters as much as how it drives.",
+    needs: [
+      { id: "V1", label: "V1", text: "Show me the car is made responsibly." },
+      { id: "V2", label: "V2", text: "I mostly drive in the city and want low running costs." },
+      { id: "V3", label: "V3", text: "It still has to feel like something I chose, not a compromise." },
+    ],
+    reactions: {
+      full: ["That is exactly the kind of thing I look for.", "Good. That matches what I care about."],
+      partial: ["That is a step in the right direction, but not the full picture.", "Okay, but I would want to know more."],
+      miss: ["That is not what I asked about.", "Hm, that does not speak to my values."],
+    },
+    convinced: "I am convinced. This feels like the right choice.",
+    notConvinced: "I am not sure the brand really means it.",
+  },
+  {
+    id: "p-weber",
+    name: "Anna Weber",
+    profile: "Sustainability lead, 47, company fleet with a CO2 target (placeholder)",
+    difficulty: "hard",
+    placeholder: true,
+    intro: "Our board set a CO2 target. I need an electric fleet that is efficient, defensible and does not hurt our budget.",
+    needs: [
+      { id: "W1", label: "W1", text: "I need efficiency per kilometre I can report." },
+      { id: "W2", label: "W2", text: "Materials and production must hold up to scrutiny." },
+      { id: "W3", label: "W3", text: "Cost over the lease period has to be predictable." },
+    ],
+    reactions: {
+      full: ["That goes straight into my report.", "Good. That is defensible in front of the board."],
+      partial: ["Useful, but I need harder facts.", "That helps, though it does not close the point."],
+      miss: ["That is not relevant to our target.", "I cannot report that."],
+    },
+    convinced: "Send me the fleet data pack. We will run a pilot.",
+    notConvinced: "Not enough evidence for the board.",
+  },
+  {
+    id: "p-jonas",
+    name: "Jonas",
+    profile: "Weekend adventurer, 36, surfboards and camping gear (placeholder)",
+    difficulty: "easy",
+    placeholder: true,
+    intro: "Weekdays it is my commute, weekends it is my base camp.",
+    needs: [
+      { id: "L1", label: "L1", text: "I want to power my gear off-grid." },
+      { id: "L2", label: "L2", text: "Boards, tent and two friends have to fit." },
+      { id: "L3", label: "L3", text: "And it should be fun on a coastal road." },
+    ],
+    reactions: {
+      full: ["Now we are talking!", "That is exactly my weekend."],
+      partial: ["Nice, but not the thing I really need.", "Okay, that is a bonus, not the answer."],
+      miss: ["That does not help me at the beach.", "Not really my problem."],
+    },
+    convinced: "Sold. When can I take it to the coast?",
+    notConvinced: "Cool car, but I am not sure it fits my weekends.",
+  },
+  {
+    id: "p-lea",
+    name: "Lea",
+    profile: "Outdoor guide, 40, runs a small business, drives clients to remote spots (placeholder)",
+    difficulty: "hard",
+    placeholder: true,
+    intro: "My car is my office and my toolbox. It has to work far from a charger, carry gear and people, and never let me down.",
+    needs: [
+      { id: "O1", label: "O1", text: "Real range and fast charging far from the city." },
+      { id: "O2", label: "O2", text: "Power for my equipment on site." },
+      { id: "O3", label: "O3", text: "Reliability I can plan a business on." },
+    ],
+    reactions: {
+      full: ["That works for my routes.", "Good. That is something I can plan with."],
+      partial: ["That helps a bit, but out there it has to be certain.", "Partly. I need more than that."],
+      miss: ["That does not help me on a mountain road.", "Not relevant for my work."],
+    },
+    convinced: "Alright. Let us talk about a business lease.",
+    notConvinced: "Too many open questions for my business.",
+  },
+];
+
+const PLACEHOLDER_MAP: CardNeedEntry[] = [
+  { cardId: "c11", needId: "V1", strength: "full" },
+  { cardId: "c04", needId: "V1", strength: "partial" },
+  { cardId: "c04", needId: "V2", strength: "full" },
+  { cardId: "c03", needId: "V2", strength: "partial" },
+  { cardId: "c06", needId: "V2", strength: "partial" },
+  { cardId: "c01", needId: "V3", strength: "full" },
+  { cardId: "c10", needId: "V3", strength: "partial" },
+  { cardId: "c04", needId: "W1", strength: "full" },
+  { cardId: "c05", needId: "W1", strength: "partial" },
+  { cardId: "c11", needId: "W2", strength: "full" },
+  { cardId: "c07", needId: "W3", strength: "full" },
+  { cardId: "c03", needId: "W3", strength: "partial" },
+  { cardId: "c04", needId: "W3", strength: "partial" },
+  { cardId: "c12", needId: "L1", strength: "full" },
+  { cardId: "c08", needId: "L2", strength: "full" },
+  { cardId: "c09", needId: "L2", strength: "full" },
+  { cardId: "c10", needId: "L3", strength: "full" },
+  { cardId: "c01", needId: "L3", strength: "partial" },
+  { cardId: "c05", needId: "O1", strength: "full" },
+  { cardId: "c06", needId: "O1", strength: "full" },
+  { cardId: "c12", needId: "O2", strength: "full" },
+  { cardId: "c07", needId: "O3", strength: "partial" },
+  { cardId: "c04", needId: "O3", strength: "partial" },
+];
+
+/** Runden: 1 und 2 aus dem Seed, 3 und 4 Platzhalter. Alle Gruppen treffen dieselben Paare. */
 export const ROUNDS: RoundDef[] = [
   { index: 0, easyPersonaId: "p-sofia", hardPersonaId: "p-henrik" },
-  { index: 1, easyPersonaId: "p-marco", hardPersonaId: "p-aiko" },
-  { index: 2, easyPersonaId: "p-lena", hardPersonaId: "p-raj" },
-  { index: 3, easyPersonaId: "p-tom", hardPersonaId: "p-isabel" },
+  { index: 1, easyPersonaId: "p-mika", hardPersonaId: "p-ruiz" },
+  { index: 2, easyPersonaId: "p-noor", hardPersonaId: "p-weber" },
+  { index: 3, easyPersonaId: "p-jonas", hardPersonaId: "p-lea" },
 ];
 
-function buildCardNeedMap(): Array<[string, string]> {
-  const pairs: Array<[string, string]> = [];
-  for (const persona of PERSONAS) {
-    for (const need of persona.needs) {
-      for (const card of CARDS) {
-        if (card.tags.some((t) => need.tags.includes(t))) pairs.push([card.id, need.id]);
-      }
-    }
-  }
-  return pairs;
-}
-
 export const CONTENT: ContentPack = {
-  cards: CARDS.map(({ id, title, text }) => ({ id, title, text })),
-  personas: PERSONAS.map((p) => ({ ...p, needs: p.needs.map(({ id, text }) => ({ id, text })) })),
-  cardNeedMap: buildCardNeedMap(),
+  cards: CARDS,
+  personas: [...SEED_PERSONAS, ...PLACEHOLDER_PERSONAS],
+  cardNeedMap: [...SEED_MAP, ...PLACEHOLDER_MAP],
+  // Spezifische geskriptete Reaktionen für die Timing-Pivots des Seeds (Beispiele, tbd)
   scriptedReactions: {
-    "n-henrik-1:c09": "Five years warranty and an eight-year battery guarantee. That is a line item I can defend.",
-    "n-raj-1:c03": "550 kilometres WLTP. On the motorway I would plan with 400. That actually works for my route.",
-    "n-tom-1:c11": "TCR titles and an electric race car? Okay, you have my attention.",
+    "H1:c03": "From around 26,000 euros with business rates? That changes my cost per car. Go on.",
+    "H1:c07": "Five years warranty and an eight-year battery guarantee. That is a line item I can defend.",
+    "F3:c07": "An eight-year battery guarantee. Okay, that is the reassurance we were looking for.",
+    "F1:c08": "441 litres and a flat floor? The buggy, the bags and the dog. That works.",
   },
 };
 

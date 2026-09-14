@@ -10,6 +10,7 @@ import type {
   Context,
   GroupState,
   Hand,
+  HitStrength,
   Member,
   Move,
   PersonaDef,
@@ -55,9 +56,13 @@ export function personaById(content: ContentPack, id: string): PersonaDef {
   return p;
 }
 
-/** Deterministischer Lookup in der CardNeedMap (D4, Abschnitt 7). */
+/** Deterministischer Lookup in der CardNeedMap (D4, Abschnitt 7), liefert die Treffer-Stärke. */
+export function matchStrength(content: ContentPack, cardId: string, needId: string): HitStrength {
+  return content.cardNeedMap.find((e) => e.cardId === cardId && e.needId === needId)?.strength ?? "none";
+}
+
 export function cardMatchesNeed(content: ContentPack, cardId: string, needId: string): boolean {
-  return content.cardNeedMap.some(([c, n]) => c === cardId && n === needId);
+  return matchStrength(content, cardId, needId) !== "none";
 }
 
 /** Konsens erreicht, wenn jedes anwesende Mitglied bestätigt hat (D2). */
@@ -204,17 +209,19 @@ function playCard(state: GroupState, cardId: string, contributorId: string, ctx:
   const persona = personaById(ctx.content, state.phase.personaId);
   const need = persona.needs[state.phase.needIndex];
   if (!need) throw new GameError("NO_NEED");
-  const hit = cardMatchesNeed(ctx.content, cardId, need.id);
-  const points = hit ? GAME_CONFIG.HIT_POINTS : 0;
+  const strength = matchStrength(ctx.content, cardId, need.id);
+  const hit = strength !== "none";
+  const points = strength === "none" ? 0 : GAME_CONFIG.HIT_POINTS[strength];
   const move: Move = {
     roundIndex: state.phase.roundIndex,
     personaId: persona.id,
     needId: need.id,
     cardId,
+    strength,
     hit,
     points,
     contributorId,
-    reaction: reactionFor(ctx, persona, need.id, cardId, hit),
+    reaction: reactionFor(ctx, persona, need.id, cardId, strength),
   };
   const hands = state.hands.map((h) => (h.cardId === cardId ? { ...h, state: "played" as const } : h));
   const memberPoints = { ...state.memberPoints };
@@ -240,10 +247,10 @@ function playCard(state: GroupState, cardId: string, contributorId: string, ctx:
   };
 }
 
-function reactionFor(ctx: Context, persona: PersonaDef, needId: string, cardId: string, hit: boolean): string {
+function reactionFor(ctx: Context, persona: PersonaDef, needId: string, cardId: string, strength: HitStrength): string {
   const specific = ctx.content.scriptedReactions?.[`${needId}:${cardId}`];
   if (specific) return specific;
-  const pool = hit ? persona.reactions.hit : persona.reactions.miss;
+  const pool = strength === "none" ? persona.reactions.miss : persona.reactions[strength];
   return pool[Math.floor(ctx.rng() * pool.length)] ?? "";
 }
 

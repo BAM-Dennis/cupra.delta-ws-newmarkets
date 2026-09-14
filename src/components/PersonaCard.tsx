@@ -17,12 +17,15 @@ export function PersonaCard({
   return (
     <div className={`flex flex-col gap-3 rounded-[12px] border p-4 backdrop-blur-[10px] ${frame}`}>
       <div className="flex items-center justify-between gap-2">
-        <Badge tone={hard ? "copper" : "teal"}>{hard ? t.hard : t.easy}</Badge>
+        <span className="flex items-center gap-2">
+          <Badge tone={hard ? "copper" : "teal"}>{hard ? t.hard : t.easy}</Badge>
+          {persona.placeholder && <Badge tone="neutral">{t.placeholder}</Badge>}
+        </span>
         <span className="text-[12px] leading-none text-white/60 tabular-nums">{t.worth(GAME_CONFIG.CONVINCED_BONUS[persona.difficulty])}</span>
       </div>
       <div>
         <p className="text-[24px] font-medium leading-none">{persona.name}</p>
-        <p className="mt-1 text-[13px] leading-[1.3] text-white/60">{persona.role}</p>
+        <p className="mt-1 text-[13px] leading-[1.3] text-white/60">{persona.profile}</p>
       </div>
       <p className="text-[14px] leading-[1.35] text-white/85">“{persona.intro}”</p>
       {onPropose && (

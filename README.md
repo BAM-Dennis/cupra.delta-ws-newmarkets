@@ -18,9 +18,11 @@ npm run dev                    # http://localhost:3000
 
 1. `/trainer` öffnen, Anzahl Teams wählen (Default 4), Session anlegen.
 2. Die Trainer-Seite zeigt pro Team einen QR-Code mit Link auf `/join/<CODE>`. Teilnehmer scannen, geben ihren Namen ein und landen in der Lobby. Alternativ den 6-stelligen Code auf `/` eintippen.
-3. „Start game“: leere Teams werden entfernt, jedes Team erhält dasselbe Deck (12 Karten), verdeckt auf die Mitglieder verteilt.
+3. „Start game“: leere Teams werden entfernt, jedes Team erhält dasselbe Deck (12 Delta-verankerte Karten), verdeckt auf die Mitglieder verteilt.
 4. Teilnehmer bestätigen ihre Karten, wählen pro Runde gemeinsam eine leichte oder schwere Persona und spielen pro Need eine Karte. Ein Mitglied schlägt vor, alle anderen anwesenden Mitglieder bestätigen.
-5. Nach 4 Runden ist das Deck leer. Trainer-Seite zeigt Team- und Einzel-Leaderboard live.
+5. Treffer sind abgestuft (voll +10, Teil +5, kein Treffer 0). Nach 4 Runden ist das Deck leer. Trainer-Seite zeigt Team- und Einzel-Leaderboard live.
+
+Runden 1 und 2 stammen aus dem Seed-Content von SAPERED, Runden 3 und 4 sind im Prototyp als Platzhalter angelegt und werden mit CUPRA ausdefiniert.
 
 Zum Testen auf einem Rechner: mehrere Browser-Profile oder private Fenster öffnen, jedes Fenster ist ein Teilnehmer (eigene User-ID im localStorage).
 
@@ -39,7 +41,7 @@ Zum Testen auf einem Rechner: mehrere Browser-Profile oder private Fenster öffn
 ```
 db/migrations/        SQL-Schema (sessions, groups, members)
 src/engine/           Reine Spiellogik: Typen, Konfiguration, Reducer, Tests
-src/data/content.ts   Demo-Inhalt: Karten, Personas, Needs, Karte-Need-Zuordnung, Runden
+src/data/content.ts   Seed-Content (SAPERED): Karten, Personas, Needs, Zuordnung mit Treffer-Stärke, Runden
 src/app/api/          Route-Handler (Sessions, Gruppen, Aktionen)
 src/lib/              DB-Pool, Repository, Leaderboard, API-Client, localStorage, Polling-Hook
 src/components/       UI-Primitives, Teilnehmer-Screens, Trainer-Ansicht

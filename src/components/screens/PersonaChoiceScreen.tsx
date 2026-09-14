@@ -42,7 +42,7 @@ export function PersonaChoiceScreen({ snapshot, meId, busy, act }: { snapshot: G
           members={members}
           meId={meId}
           title={`${proposedPersona.name} · ${proposedPersona.difficulty === "hard" ? t.hard : t.easy}`}
-          subtitle={proposedPersona.role}
+          subtitle={proposedPersona.profile}
           busy={busy}
           onConfirm={() => act({ type: "CONFIRM" })}
           onReject={() => act({ type: "REJECT" })}

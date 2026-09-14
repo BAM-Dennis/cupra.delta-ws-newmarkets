@@ -42,7 +42,9 @@ export const t = {
   teamCardsLeft: (n: number) => `Team cards left: ${n}`,
   spent: "Played",
   hit: "Match",
+  partial: "Partial match",
   miss: "No match",
+  placeholder: "Placeholder persona",
   hits: "Hits",
   // Result
   convinced: "Convinced!",

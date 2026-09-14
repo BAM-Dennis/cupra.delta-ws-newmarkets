@@ -13,29 +13,43 @@ export interface ArgumentCardDef {
 
 export interface NeedDef {
   id: string;
+  /** Kurzlabel aus dem Seed-Content, z. B. "S1" */
+  label: string;
   text: string;
+}
+
+/** Abgestufte Treffer (Seed-Content): voll, Teil oder kein Treffer. */
+export type HitStrength = "full" | "partial" | "none";
+
+/** Ein gültiges Paar der CardNeedMap mit seiner Treffer-Stärke. */
+export interface CardNeedEntry {
+  cardId: string;
+  needId: string;
+  strength: Exclude<HitStrength, "none">;
 }
 
 export interface PersonaDef {
   id: string;
   name: string;
-  /** Kurzbeschreibung des Segments, z. B. "Fleet manager, 52" */
-  role: string;
+  /** Profil, z. B. "Fleet manager, 52, 120 company cars" */
+  profile: string;
   difficulty: Difficulty;
   intro: string;
   needs: NeedDef[];
-  /** Generische geskriptete Reaktionen (D3), falls kein spezifischer Text hinterlegt ist */
-  reactions: { hit: string[]; miss: string[] };
+  /** Generische geskriptete Reaktionen (D3) je Treffer-Stärke, falls kein spezifischer Text hinterlegt ist */
+  reactions: { full: string[]; partial: string[]; miss: string[] };
   convinced: string;
   notConvinced: string;
+  /** Platzhalter, der noch mit CUPRA ausdefiniert wird (Runden 3 und 4 im Seed-Content) */
+  placeholder?: boolean;
 }
 
 /** Inhaltspaket: Karten, Personas und die Karte-Need-Zuordnung (Abschnitt 7 des Konzepts). */
 export interface ContentPack {
   cards: ArgumentCardDef[];
   personas: PersonaDef[];
-  /** CardNeedMap – gültige Paare, many-to-many */
-  cardNeedMap: Array<[cardId: string, needId: string]>;
+  /** CardNeedMap – gültige Paare mit Treffer-Stärke, many-to-many */
+  cardNeedMap: CardNeedEntry[];
   /** Optionale spezifische Reaktion je Kombination "needId:cardId" */
   scriptedReactions?: Record<string, string>;
 }
@@ -73,6 +87,8 @@ export interface Move {
   personaId: string;
   needId: string;
   cardId: string;
+  strength: HitStrength;
+  /** true bei vollem oder Teiltreffer */
   hit: boolean;
   points: number;
   contributorId: string;

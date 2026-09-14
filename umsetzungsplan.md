@@ -1,7 +1,7 @@
 # Umsetzungsplan: Workshop 3 „New Market Segment“ (Team-Kartenspiel)
 
 **Projekt:** CUPRA Global Launch Training, Workshop 3
-**Grundlage:** [Konzept und Aufwandsschätzung von SAPERED](SAPERED_Workshop-App_Konzept_Aufwandsschaetzung_WS3_NewMarketSegment.md), Stand 14.09.2026
+**Grundlage:** [Konzept und Aufwandsschätzung von SAPERED](SAPERED_Workshop-App_Konzept_Aufwandsschaetzung_WS3_NewMarketSegment.md) und [Seed-Content](SAPERED_Workshop-App_SeedContent_WS3_NewMarketSegment.md), Stand 14.09.2026
 **Design-Referenz:** CUPRA Streak Challenge (`cupra.streak-challenge`), Figma-Design CUPRA-GLT-27
 **Stand dieses Plans:** 14.09.2026, Phase 0 (Prototyp) umgesetzt
 
@@ -46,7 +46,9 @@ Der Prototyp ist bewusst so gebaut, dass Phase 1 bis 3 darauf aufsetzen und nich
 | Anwesenheit | Mitglied zählt zum Konsens, wenn Lebenszeichen jünger als 45 s | ein gesperrtes Handy blockiert das Team nicht |
 | Identität | UUID im localStorage, Nickname je Team, kein Login | wie Streak Challenge; wird in Phase 3 durch die Plattform-Identität ersetzt |
 | Trainer-Rechte | Token bei Session-Erstellung, im Browser gespeichert | reicht für Pilot; Plattform-Rolle in Phase 3 |
-| Inhalt | Demo-Content in `src/data/content.ts`, Zuordnung aus Tags erzeugt, Engine nutzt explizite Paare | Balance-Regel „volle Abdeckung“ per Test prüfbar |
+| Inhalt | Seed-Content von SAPERED in `src/data/content.ts`: 12 Delta-verankerte Karten, Runden 1 und 2, explizite Karte-Need-Zuordnung mit Treffer-Stärke | Balance-Regel „volle Abdeckung“ per Test prüfbar |
+| Runden 3 und 4 | Platzhalter-Personas (werteorientiert, Lifestyle/Outdoor) nach den Typen aus dem Seed, im Code als `placeholder` markiert | Deck bleibt spielbar und voll abgedeckt; Inhalte werden mit CUPRA ausdefiniert |
+| Treffer | abgestuft: voll, Teil, kein Treffer; Stärke steht in der CardNeedMap | bestätigter Änderungsposten aus dem Seed-Content |
 
 ### Datenmodell (umgesetzt)
 
@@ -78,8 +80,8 @@ Alle Werte in `src/engine/config.ts`, ohne Codeänderung anpassbar:
 | Deckgröße | 12 | tbd |
 | Needs (Argumente) pro Persona | 3 | tbd, 3 bis 5 |
 | Runden | 4 (Deck 12 / 3 Needs) | mehrere |
-| Persona überzeugt ab | 2 von 3 Treffern | tbd |
-| Punkte pro Treffer | 10 | „passende Argumente geben Punkte“ |
+| Persona überzeugt ab | 2 von 3 Treffern (voll oder Teil zählt) | tbd, 1 von 3 reicht nicht |
+| Punkte pro Treffer | voll 10, Teil 5 (abgestuft, aus Seed-Content) | „passende Argumente geben Punkte“ |
 | Bonus überzeugte Persona | leicht 20, schwer 50 | nach Schwierigkeit skaliert |
 | Einzelpunkte | volle Teampunkte je Mitglied plus 3 je eigener Treffer-Karte | Anteil plus kleiner Bonus |
 | Präsenz-Fenster | 45 s | nicht spezifiziert |
@@ -183,7 +185,7 @@ Ziel: ein echter Workshop mit 4 Teams à 3 bis 6 Personen läuft ohne Entwickler
 
 ## 8. Offene Punkte und Abhängigkeiten
 
-- **SAPERED und CUPRA:** Argumentkarten, Personas mit Needs, Karte-Need-Zuordnung, Deck-Balance, geskriptete Reaktionen; Entscheidung geskriptet versus KI.
+- **SAPERED und CUPRA:** Runden 3 und 4 ausdefinieren (die Platzhalter im Prototyp ersetzen), CUPRAs offizielle Positionierung des Delta einarbeiten, geskriptete Reaktionen je Persona und Treffer-Stärke liefern; Entscheidung geskriptet versus KI.
 - **Feinkonzept:** Deckgröße, Needs pro Persona, Rundenzahl, Überzeugt-Regel, Aufteilung der Einzelpunkte.
 - **Plattform Competitor I und II:** Stand von Identität, Session und Leaderboard, um Phase 3 zu planen.
 - **Grafiker:** finales Visual für Karten, Dialog und Leaderboards.

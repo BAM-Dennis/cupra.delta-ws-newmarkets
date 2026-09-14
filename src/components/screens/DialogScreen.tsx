@@ -21,6 +21,15 @@ export function DialogScreen({ snapshot, meId, busy, act }: { snapshot: GroupSna
   const mine = handsOf(state, meId);
   const proposedCard = proposal ? getCard(proposal.value) : null;
   const lastCard = lastMove ? getCard(lastMove.cardId) : null;
+  // Treffer-Stärke je Need dieser Persona in dieser Runde für die Punktanzeige
+  const roundMoves = state.moves.filter((m) => m.roundIndex === roundIndex && m.personaId === personaId);
+  const dotTone = (i: number) => {
+    const mv = roundMoves[i];
+    if (!mv) return "bg-white/20";
+    if (mv.strength === "full") return "bg-correct";
+    if (mv.strength === "partial") return "bg-warn";
+    return "bg-signal/70";
+  };
 
   const visual = (cardId: string, played: boolean): CardVisualState => {
     if (played) return "spent";
@@ -34,13 +43,13 @@ export function DialogScreen({ snapshot, meId, busy, act }: { snapshot: GroupSna
       <div className="mt-5 flex items-end justify-between gap-3 animate-fade-up">
         <div className="min-w-0">
           <p className="text-[24px] font-medium leading-none">{persona.name}</p>
-          <p className="mt-1 truncate text-[13px] leading-[1.3] text-white/60">{persona.role}</p>
+          <p className="mt-1 truncate text-[13px] leading-[1.3] text-white/60">{persona.profile}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Badge tone={persona.difficulty === "hard" ? "copper" : "teal"}>{persona.difficulty === "hard" ? t.hard : t.easy}</Badge>
           <span className="flex items-center gap-[3px]" aria-label={`${t.hits}: ${hits}`}>
             {persona.needs.map((n, i) => (
-              <span key={n.id} className={`size-[8px] rounded-full ${i < hits ? "bg-correct" : i < needIndex ? "bg-signal/70" : "bg-white/20"}`} />
+              <span key={n.id} className={`size-[8px] rounded-full ${dotTone(i)}`} />
             ))}
           </span>
         </div>
@@ -51,7 +60,9 @@ export function DialogScreen({ snapshot, meId, busy, act }: { snapshot: GroupSna
         <div key={lastMove.cardId} className="mt-4 rounded-[12px] border border-white/10 bg-black/20 p-4 animate-bubble-in">
           <div className="flex items-center justify-between gap-2">
             <Overline className="text-white/50">{lastCard.title}</Overline>
-            <Badge tone={lastMove.hit ? "correct" : "signal"}>{lastMove.hit ? `${t.hit} +${lastMove.points}` : t.miss}</Badge>
+            <Badge tone={lastMove.strength === "full" ? "correct" : lastMove.strength === "partial" ? "warn" : "signal"}>
+              {lastMove.strength === "full" ? `${t.hit} +${lastMove.points}` : lastMove.strength === "partial" ? `${t.partial} +${lastMove.points}` : t.miss}
+            </Badge>
           </div>
           <p className="mt-2 text-[14px] italic leading-[1.35] text-white/80">“{lastMove.reaction}”</p>
         </div>
