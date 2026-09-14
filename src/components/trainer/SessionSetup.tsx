@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GAME_CONFIG } from "@/engine/config";
 import { t } from "@/i18n/en";
-import { createSession } from "@/lib/api";
+import { createSession, describeError } from "@/lib/api";
 import { loadLastSession, saveTrainerToken } from "@/lib/storage";
 import { Background } from "../Background";
 import { Logo } from "../Logo";
@@ -34,8 +34,8 @@ export function SessionSetup() {
       const res = await createSession(n);
       saveTrainerToken(res.sessionId, res.trainerToken);
       router.push(`/trainer/${res.sessionId}`);
-    } catch {
-      setError(t.errorUnreachable);
+    } catch (err) {
+      setError(describeError(err, t.errorUnreachable));
       setBusy(false);
     }
   };

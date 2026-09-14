@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Action } from "@/engine/types";
 import { t } from "@/i18n/en";
-import { ApiError, joinGroup, sendAction } from "@/lib/api";
+import { ApiError, describeError, joinGroup, sendAction } from "@/lib/api";
 import { loadStoredUser, saveNickname, type StoredUser } from "@/lib/storage";
 import { useGroupState } from "@/lib/useGroupState";
 import { Background } from "./Background";
@@ -50,7 +50,7 @@ export function GroupGame({ code }: { code: string }) {
         setUser({ ...user, nickname });
         apply(snap);
       } catch (err) {
-        setJoinError(err instanceof ApiError && err.status === 404 ? t.groupNotFound : t.errorUnreachable);
+        setJoinError(err instanceof ApiError && err.status === 404 ? t.groupNotFound : describeError(err, t.errorUnreachable));
       } finally {
         setBusy(false);
       }

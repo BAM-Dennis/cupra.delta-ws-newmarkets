@@ -11,6 +11,15 @@ export class ApiError extends Error {
   }
 }
 
+/** Lesbare Kurzform für die Anzeige, z. B. "500 INTERNAL: relation … does not exist". */
+export function describeError(err: unknown, fallback: string): string {
+  if (err instanceof ApiError) {
+    const detail = err.message && err.message !== err.code ? `: ${err.message}` : "";
+    return err.status === 0 ? fallback : `${err.status} ${err.code}${detail}`;
+  }
+  return fallback;
+}
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     ...init,
