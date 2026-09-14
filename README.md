@@ -57,4 +57,8 @@ Alle Tuning-Werte (Deckgröße, Punkte, Schwellen, Poll-Intervalle) liegen in `s
 
 ## Deployment
 
-Vercel (Region fra1, siehe `vercel.json`) plus Neon Postgres. `DATABASE_URL` mit `sslmode=require` in Vercel setzen, Schema einmalig mit `npm run db:migrate` gegen den ungepoolten Connection-String anlegen.
+Vercel (Region fra1, siehe `vercel.json`) plus Neon Postgres in Frankfurt. Der Prototyp nutzt im Neon-Projekt der Streak Challenge eine **eigene Datenbank `nms`**, damit sich beide Apps nicht in die Quere kommen (beide führen eine Tabelle `schema_migrations` mit gleich benannten Migrationen).
+
+- In Vercel `DATABASE_URL` auf den **gepoolten** Neon-String mit Datenbank `/nms` und `sslmode=require` setzen (Production und Preview).
+- Schema-Änderungen einmalig mit dem **ungepoolten** String anwenden: `DATABASE_URL=<unpooled …/nms> npx tsx scripts/migrate.mts`.
+- Lokal liegen beide Strings in `.env.production.local` (gitignored); `npm run build && npm run start` läuft damit gegen Neon.
