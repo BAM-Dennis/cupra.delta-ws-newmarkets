@@ -1,0 +1,60 @@
+# CUPRA Workshop 3 „New Market Segment“ – Team-Kartenspiel (Prototyp)
+
+Digitales Teamspiel für das CUPRA Global Launch Training: Gruppen halten ein Deck aus Argumentkarten und überzeugen per Konsens-Spielzug nacheinander Personas eines neuen Marktsegments. Fachliche Grundlage ist das Konzeptdokument von SAPERED, siehe [SAPERED_Workshop-App_Konzept_Aufwandsschaetzung_WS3_NewMarketSegment.md](SAPERED_Workshop-App_Konzept_Aufwandsschaetzung_WS3_NewMarketSegment.md). Der Umsetzungsplan steht in [umsetzungsplan.md](umsetzungsplan.md).
+
+**Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Postgres über `pg`, Zod, Vitest. Design-System, Fonts und Assets stammen aus der CUPRA Streak Challenge.
+
+## Lokal starten
+
+```bash
+npm install
+cp .env.example .env.local     # DATABASE_URL zeigt auf die Docker-DB
+npm run db:up                  # Postgres 16 auf Port 5442
+npm run db:migrate
+npm run dev                    # http://localhost:3000
+```
+
+## Demo-Ablauf
+
+1. `/trainer` öffnen, Anzahl Teams wählen (Default 4), Session anlegen.
+2. Die Trainer-Seite zeigt pro Team einen QR-Code mit Link auf `/join/<CODE>`. Teilnehmer scannen, geben ihren Namen ein und landen in der Lobby. Alternativ den 6-stelligen Code auf `/` eintippen.
+3. „Start game“: leere Teams werden entfernt, jedes Team erhält dasselbe Deck (12 Karten), verdeckt auf die Mitglieder verteilt.
+4. Teilnehmer bestätigen ihre Karten, wählen pro Runde gemeinsam eine leichte oder schwere Persona und spielen pro Need eine Karte. Ein Mitglied schlägt vor, alle anderen anwesenden Mitglieder bestätigen.
+5. Nach 4 Runden ist das Deck leer. Trainer-Seite zeigt Team- und Einzel-Leaderboard live.
+
+Zum Testen auf einem Rechner: mehrere Browser-Profile oder private Fenster öffnen, jedes Fenster ist ein Teilnehmer (eigene User-ID im localStorage).
+
+## Skripte
+
+| Skript | Zweck |
+|---|---|
+| `npm run dev` / `build` / `start` | Next.js |
+| `npm test` | Engine-Tests (Vitest) |
+| `npm run lint` | ESLint |
+| `npm run db:up` | Postgres per Docker Compose |
+| `npm run db:migrate` | SQL-Migrationen aus `db/migrations` anwenden |
+
+## Struktur
+
+```
+db/migrations/        SQL-Schema (sessions, groups, members)
+src/engine/           Reine Spiellogik: Typen, Konfiguration, Reducer, Tests
+src/data/content.ts   Demo-Inhalt: Karten, Personas, Needs, Karte-Need-Zuordnung, Runden
+src/app/api/          Route-Handler (Sessions, Gruppen, Aktionen)
+src/lib/              DB-Pool, Repository, Leaderboard, API-Client, localStorage, Polling-Hook
+src/components/       UI-Primitives, Teilnehmer-Screens, Trainer-Ansicht
+src/i18n/en.ts        UI-Texte
+```
+
+Alle Tuning-Werte (Deckgröße, Punkte, Schwellen, Poll-Intervalle) liegen in `src/engine/config.ts`.
+
+## Architektur in Kürze
+
+- **Server-authoritative:** Jede Aktion eines Teilnehmers läuft serverseitig durch den Reducer in `src/engine/game.ts`, unter Zeilensperre auf der Gruppe. Der Client rendert nur den Snapshot.
+- **Geteilter Gruppenzustand:** liegt als JSONB in `groups.state` mit Versionszähler. Teilnehmer-Devices pollen alle 1,5 s mit `?since=<version>`; unverändert liefert nur Präsenzdaten. Der Poll ist zugleich das Lebenszeichen für die Anwesenheit.
+- **Konsens:** Ein Vorschlag gilt, wenn alle anwesenden Mitglieder (Lebenszeichen in den letzten 45 s) bestätigt haben. Mitglieder ohne Lebenszeichen blockieren den Spielzug nicht.
+- **Identität:** persistente User-ID im localStorage, kein Login. Trainer-Rechte über ein Token, das bei Session-Erstellung im Browser gespeichert wird.
+
+## Deployment
+
+Vercel (Region fra1, siehe `vercel.json`) plus Neon Postgres. `DATABASE_URL` mit `sslmode=require` in Vercel setzen, Schema einmalig mit `npm run db:migrate` gegen den ungepoolten Connection-String anlegen.
