@@ -5,6 +5,7 @@ import { handsOf, openHands } from "@/engine/game";
 import { t } from "@/i18n/en";
 import type { GroupSnapshot } from "@/lib/api";
 import { ArgumentCard, type CardVisualState } from "../ArgumentCard";
+import { PersonaAvatar } from "../PersonaAvatar";
 import { ProposalBanner } from "../ProposalBanner";
 import { ScreenShell } from "../ScreenShell";
 import { Badge, Overline } from "../ui";
@@ -40,10 +41,13 @@ export function DialogScreen({ snapshot, meId, busy, act }: { snapshot: GroupSna
   return (
     <ScreenShell groupName={snapshot.group.name} overline={t.round(roundIndex + 1, session.rounds.length)} members={members} meId={meId}>
       {/* Persona-Kopf */}
-      <div className="mt-5 flex items-end justify-between gap-3 animate-fade-up">
-        <div className="min-w-0">
-          <p className="text-[24px] font-medium leading-none">{persona.name}</p>
-          <p className="mt-1 truncate text-[13px] leading-[1.3] text-white/60">{persona.profile}</p>
+      <div className="mt-5 flex items-center justify-between gap-3 animate-fade-up">
+        <div className="flex min-w-0 items-center gap-3">
+          <PersonaAvatar persona={persona} size="md" />
+          <div className="min-w-0">
+            <p className="text-[24px] font-medium leading-none">{persona.name}</p>
+            <p className="mt-1 truncate text-[13px] leading-[1.3] text-white/60">{persona.profile}</p>
+          </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Badge tone={persona.difficulty === "hard" ? "copper" : "teal"}>{persona.difficulty === "hard" ? t.hard : t.easy}</Badge>

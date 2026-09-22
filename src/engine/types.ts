@@ -42,6 +42,8 @@ export interface PersonaDef {
   notConvinced: string;
   /** Platzhalter, der noch mit CUPRA ausdefiniert wird (Runden 3 und 4 im Seed-Content) */
   placeholder?: boolean;
+  /** Portrait unter public/, z. B. "/design/personas/sofia.jpg"; ohne Bild zeigt die App eine Initiale */
+  image?: string;
 }
 
 /** Inhaltspaket: Karten, Personas und die Karte-Need-Zuordnung (Abschnitt 7 des Konzepts). */

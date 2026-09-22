@@ -3,6 +3,7 @@
 import { getPersona } from "@/data/content";
 import { t } from "@/i18n/en";
 import type { GroupSnapshot } from "@/lib/api";
+import { PersonaAvatar } from "../PersonaAvatar";
 import { ScreenShell } from "../ScreenShell";
 import { Badge, PrimaryButton, StatTile } from "../ui";
 import type { Act } from "../GroupGame";
@@ -18,6 +19,7 @@ export function PersonaResultScreen({ snapshot, meId, busy, act }: { snapshot: G
   return (
     <ScreenShell groupName={snapshot.group.name} overline={t.round(roundIndex + 1, session.rounds.length)} members={members} meId={meId}>
       <div className="flex flex-1 flex-col items-center justify-center gap-6 py-8 animate-pop">
+        <PersonaAvatar persona={persona} size="lg" className={outcome.convinced ? "border-correct shadow-glow" : "border-signal"} />
         <Badge tone={outcome.convinced ? "correct" : "signal"} className="text-[12px]">
           {outcome.convinced ? t.convinced : t.notConvinced}
         </Badge>

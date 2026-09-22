@@ -2,6 +2,7 @@
 
 import type { Member, Proposal } from "@/engine/types";
 import { t } from "@/i18n/en";
+import type { ReactNode } from "react";
 import { PrimaryButton, SecondaryButton } from "./ui";
 
 /**
@@ -9,13 +10,15 @@ import { PrimaryButton, SecondaryButton } from "./ui";
  * zurückziehen, alle anderen bestätigen oder lehnen ab.
  */
 export function ProposalBanner({
-  proposal, members, meId, title, subtitle, onConfirm, onReject, onWithdraw, busy,
+  proposal, members, meId, title, subtitle, leading, onConfirm, onReject, onWithdraw, busy,
 }: {
   proposal: Proposal;
   members: Array<Member & { active: boolean }>;
   meId: string;
   title: string;
   subtitle?: string;
+  /** Optionales Element links vom Titel, z. B. ein Persona-Portrait */
+  leading?: ReactNode;
   onConfirm: () => void;
   onReject: () => void;
   onWithdraw: () => void;
@@ -31,8 +34,13 @@ export function ProposalBanner({
     <div className="sticky bottom-0 z-20 -mx-5 mt-auto bg-gradient-to-b from-transparent via-night/95 to-night px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-8">
       <div className="flex flex-col gap-3 rounded-[12px] border border-teal/60 bg-teal-tint p-4 shadow-glow animate-slide-up" style={{ backgroundColor: "#1f1e29" }}>
         <p className="text-[10px] font-medium uppercase leading-none tracking-[1px] text-teal">{t.proposedBy(proposer?.nickname ?? "?")}</p>
-        <p className="text-[16px] font-medium leading-[1.2]">{title}</p>
-        {subtitle && <p className="text-[13px] leading-[1.3] text-white/70">{subtitle}</p>}
+        <div className="flex items-center gap-3">
+          {leading}
+          <div className="min-w-0">
+            <p className="text-[16px] font-medium leading-[1.2]">{title}</p>
+            {subtitle && <p className="mt-1 text-[13px] leading-[1.3] text-white/70">{subtitle}</p>}
+          </div>
+        </div>
         <p className="text-[12px] leading-none text-white/60 tabular-nums">{t.waitingForTeam(done, required)}</p>
         {mine || iConfirmed ? (
           <SecondaryButton onClick={onWithdraw} disabled={busy || !mine}>

@@ -3,6 +3,7 @@
 import { getPersona } from "@/data/content";
 import { t } from "@/i18n/en";
 import type { GroupSnapshot } from "@/lib/api";
+import { PersonaAvatar } from "../PersonaAvatar";
 import { PersonaCard } from "../PersonaCard";
 import { ProposalBanner } from "../ProposalBanner";
 import { ScreenShell } from "../ScreenShell";
@@ -43,6 +44,7 @@ export function PersonaChoiceScreen({ snapshot, meId, busy, act }: { snapshot: G
           meId={meId}
           title={`${proposedPersona.name} · ${proposedPersona.difficulty === "hard" ? t.hard : t.easy}`}
           subtitle={proposedPersona.profile}
+          leading={<PersonaAvatar persona={proposedPersona} size="sm" />}
           busy={busy}
           onConfirm={() => act({ type: "CONFIRM" })}
           onReject={() => act({ type: "REJECT" })}

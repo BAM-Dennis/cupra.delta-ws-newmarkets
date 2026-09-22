@@ -9,6 +9,7 @@ import { ApiError, fetchSession, startSession, type GroupOverview, type SessionO
 import { loadTrainerToken } from "@/lib/storage";
 import { Background } from "../Background";
 import { Leaderboards } from "../Leaderboards";
+import { PersonaAvatar } from "../PersonaAvatar";
 import { Logo } from "../Logo";
 import { Badge, ErrorText, Overline, Panel, PrimaryButton, SecondaryButton } from "../ui";
 
@@ -53,10 +54,13 @@ function GroupTile({ group, rounds }: { group: GroupOverview; rounds: number }) 
         <p className="text-[20px] font-medium leading-none">{group.name}</p>
         <Badge tone={tone}>{group.pendingProposal ? t.pendingProposal : t.phase[group.phase]}</Badge>
       </div>
-      <p className="text-[13px] leading-[1.3] text-white/60">
-        {group.roundIndex !== null && `${t.round(group.roundIndex + 1, rounds)}`}
-        {persona && ` · ${persona.name} (${persona.difficulty === "hard" ? t.hard : t.easy})`}
-      </p>
+      <div className="flex items-center gap-2">
+        {persona && <PersonaAvatar persona={persona} size="sm" />}
+        <p className="text-[13px] leading-[1.3] text-white/60">
+          {group.roundIndex !== null && `${t.round(group.roundIndex + 1, rounds)}`}
+          {persona && ` · ${persona.name} (${persona.difficulty === "hard" ? t.hard : t.easy})`}
+        </p>
+      </div>
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="rounded-[6px] bg-white/5 p-2">
           <p className="text-[8px] font-medium uppercase text-white/60">{t.score}</p>

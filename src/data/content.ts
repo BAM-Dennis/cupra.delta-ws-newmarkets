@@ -36,6 +36,7 @@ const SEED_PERSONAS: PersonaDef[] = [
   {
     id: "p-sofia",
     name: "Sofia",
+    image: "/design/personas/sofia.jpg",
     profile: "Urban professional, 34, first premium car, coming from a small hatchback",
     difficulty: "easy",
     intro: "I have been driving a small hatchback for years. Now I want something that feels special, but I do not want to overspend.",
@@ -55,6 +56,7 @@ const SEED_PERSONAS: PersonaDef[] = [
   {
     id: "p-henrik",
     name: "Henrik",
+    image: "/design/personas/henrik.jpg",
     profile: "Fleet manager, 52, responsible for 120 company cars, decides rationally",
     difficulty: "hard",
     intro: "I decide by spreadsheet. Emotions do not pay my budget. Convince me on numbers and reliability.",
