@@ -97,9 +97,12 @@ export function Badge({ tone = "neutral", children, className = "" }: { tone?: k
   );
 }
 
-/** Texteingabe im Stil des Nickname-Felds der Streak Challenge. */
+/**
+ * Texteingabe im Stil des Nickname-Felds der Streak Challenge. Namen erscheinen so, wie sie
+ * getippt werden; nur der Team-Code wird per `uppercase` in Großbuchstaben dargestellt.
+ */
 export function TextField({
-  id, value, onChange, placeholder, maxLength, type = "text", inputMode, autoFocus,
+  id, value, onChange, placeholder, maxLength, type = "text", inputMode, autoFocus, uppercase = false,
 }: {
   id: string;
   value: string;
@@ -109,6 +112,7 @@ export function TextField({
   type?: "text" | "number";
   inputMode?: "text" | "numeric";
   autoFocus?: boolean;
+  uppercase?: boolean;
 }) {
   return (
     <div className="flex h-[54px] w-full items-center rounded-[6px] border border-white/25 bg-white/5 px-4 focus-within:border-white/60">
@@ -122,7 +126,7 @@ export function TextField({
         autoFocus={autoFocus}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="min-w-0 flex-1 bg-transparent text-[14px] uppercase leading-[1.2] tracking-[0.56px] text-white outline-none placeholder:text-white/50"
+        className={`min-w-0 flex-1 bg-transparent text-[14px] leading-[1.2] tracking-[0.56px] text-white outline-none placeholder:text-white/50 ${uppercase ? "uppercase" : ""}`}
       />
     </div>
   );

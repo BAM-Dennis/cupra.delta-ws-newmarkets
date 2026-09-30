@@ -75,6 +75,18 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/*
+ * Layout gegen versehentliches Pinch-Zoom sperren: touch-action lässt Scrollen zu, aber
+ * kein Zoom; overflow-x clip verhindert, dass dekorative Ebenen (Emblem-Glow, Hintergrund)
+ * das Dokument breiter als den Viewport machen und der Screen nach dem Zoom versetzt bleibt.
+ */
+html,
+body {
+  overflow-x: clip;
+  touch-action: manipulation;
+  max-width: 100%;
+}
+
 body {
   background-color: var(--color-night);
   color: #fff;

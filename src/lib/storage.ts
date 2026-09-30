@@ -7,6 +7,7 @@ const KEYS = {
   nickname: "nms.nickname",
   trainerToken: (sessionId: string) => `nms.trainer.${sessionId}`,
   lastSession: "nms.trainer.lastSession",
+  rulesSeen: "nms.rulesSeen",
 } as const;
 
 function read(key: string): string | null {
@@ -62,4 +63,13 @@ export function loadTrainerToken(sessionId: string): string | null {
 
 export function loadLastSession(): string | null {
   return read(KEYS.lastSession);
+}
+
+/** Spielregeln-Panel auf dem Kartenscreen wurde weggeklickt. */
+export function loadRulesSeen(): boolean {
+  return read(KEYS.rulesSeen) === "1";
+}
+
+export function saveRulesSeen() {
+  write(KEYS.rulesSeen, "1");
 }

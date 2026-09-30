@@ -2,11 +2,13 @@
 import { GAME_CONFIG } from "@/engine/config";
 import type { PersonaDef } from "@/engine/types";
 import { t } from "@/i18n/en";
+import { PersonaAvatar } from "./PersonaAvatar";
 import { Badge } from "./ui";
 
 /**
  * Persona-Karte für die gemeinsame Wahl (C1): großes Portrait oben, darunter Name, Profil
- * und Zitat. Schwierigkeit und Punktwert offen sichtbar.
+ * und Zitat. Schwierigkeit und Punktwert offen sichtbar. Ohne Foto erhält die Karte einen
+ * gleich aufgebauten Kopf mit dem Initialen-Avatar, damit nichts unfertig wirkt.
  */
 export function PersonaCard({
   persona, proposed = false, onPropose, disabled,
@@ -29,15 +31,19 @@ export function PersonaCard({
   );
   return (
     <div className={`flex flex-col overflow-hidden rounded-[12px] border backdrop-blur-[10px] ${frame}`}>
-      {persona.image && (
+      {persona.image ? (
         <div className="relative aspect-[4/3] w-full">
           <img alt={persona.name} src={persona.image} className="absolute inset-0 size-full object-cover" />
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-night/90 to-transparent" />
           <div className="absolute inset-x-4 bottom-3">{badges}</div>
         </div>
+      ) : (
+        <div className="relative flex items-end justify-between gap-3 bg-gradient-to-b from-white/10 to-transparent px-4 pb-3 pt-4">
+          <PersonaAvatar persona={persona} size="lg" />
+          <div className="min-w-0 flex-1">{badges}</div>
+        </div>
       )}
       <div className="flex flex-col gap-3 p-4">
-        {!persona.image && badges}
         <div>
           <p className="text-[24px] font-medium leading-none">{persona.name}</p>
           <p className="mt-1 text-[13px] leading-[1.3] text-white/60">{persona.profile}</p>

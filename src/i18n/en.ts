@@ -15,6 +15,14 @@ export const t = {
   join: "Join",
   // Lobby
   lobbyWaiting: "Waiting for the trainer to start the game.",
+  // Rules (shown in the lobby and on the first cards screen)
+  howItWorks: "How it works",
+  rules: [
+    "Your team shares one deck of argument cards. Each card can be played once, then it is gone.",
+    "Some needs fit only one card. Discuss as a team where to spend it.",
+    "The harder persona needs stronger arguments, but earns more points.",
+  ],
+  gotIt: "Got it",
   members: "Team members",
   you: "you",
   // Cards
@@ -31,7 +39,7 @@ export const t = {
   hard: "Hard",
   worth: (points: number) => `+${points} if convinced`,
   propose: "Propose",
-  proposedBy: (name: string) => `${name} proposes`,
+  proposes: "proposes",
   confirm: "Confirm",
   reject: "Reject",
   withdraw: "Withdraw",

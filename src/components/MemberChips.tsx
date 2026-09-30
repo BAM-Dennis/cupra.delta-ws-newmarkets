@@ -21,7 +21,7 @@ export function MemberChips({
             } ${m.active ? "" : "opacity-40"}`}
           >
             <span className={`size-[6px] rounded-full ${m.active ? "bg-correct" : "bg-white/40"}`} />
-            <span className="max-w-[120px] truncate">{m.nickname}</span>
+            <span className="max-w-[120px] truncate leading-[1.3]">{m.nickname}</span>
             {m.userId === meId && <span className="text-white/50">({t.you})</span>}
             {confirmedIds && <span className={confirmed ? "text-teal" : "text-white/30"}>{confirmed ? "✓" : "○"}</span>}
           </li>

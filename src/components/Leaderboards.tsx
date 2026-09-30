@@ -2,12 +2,13 @@ import { t } from "@/i18n/en";
 import type { GroupLeaderboardEntry, IndividualLeaderboardEntry } from "@/lib/leaderboard";
 import { Overline } from "./ui";
 
+/** Zeile: Name mit Ellipse gekürzt; line-height 1.3, damit Unterlängen (g, j, y) nicht abgeschnitten werden. */
 function Row({ rank, label, sub, value, highlighted }: { rank: number; label: string; sub?: string; value: string; highlighted: boolean }) {
   const tone = highlighted ? "border border-teal bg-teal-tint shadow-glow" : "border border-white/5 bg-white/5 backdrop-blur-[10px]";
   return (
     <li className={`flex min-h-11 items-center gap-[10px] rounded-[6px] px-[17px] py-[10px] ${tone}`}>
       <span className="flex size-6 shrink-0 items-center justify-center text-[16px] font-medium leading-none tabular-nums">{rank}</span>
-      <span className="min-w-0 flex-1 truncate text-[16px] leading-none">
+      <span className="min-w-0 flex-1 truncate text-[16px] leading-[1.3]">
         {label}
         {sub && <span className="ml-2 text-[12px] text-white/50">{sub}</span>}
       </span>

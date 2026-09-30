@@ -50,22 +50,22 @@ export function SessionSetup() {
           void submit();
         }}
       >
-        <div className="mt-[calc(14dvh-16px)]">
+        <div className="my-auto flex flex-col py-6">
           <Logo />
-        </div>
-        <div className="mt-10 flex flex-col items-center gap-[13px]">
-          <p className="text-center text-[20px] font-medium leading-none">{t.trainerTitle}</p>
-          <label htmlFor="groups" className="mt-2 text-center text-[12px] leading-[1.2] tracking-[0.48px]">
-            {t.trainerGroups} ({GAME_CONFIG.MIN_GROUP_COUNT}–{GAME_CONFIG.MAX_GROUP_COUNT})
-          </label>
-          <TextField id="groups" type="number" inputMode="numeric" value={groupCount} onChange={setGroupCount} />
-          {error && <ErrorText>{error}</ErrorText>}
-        </div>
-        <div className="mt-4 flex flex-col gap-3">
-          <PrimaryButton type="submit" disabled={!valid || busy}>
-            {busy ? "…" : t.trainerCreate}
-          </PrimaryButton>
-          {lastSession && <SecondaryButton href={`/trainer/${lastSession}`}>{t.trainerResume}</SecondaryButton>}
+          <div className="mt-10 flex flex-col items-center gap-[13px]">
+            <p className="text-center text-[20px] font-medium leading-none">{t.trainerTitle}</p>
+            <label htmlFor="groups" className="mt-2 text-center text-[12px] leading-[1.2] tracking-[0.48px]">
+              {t.trainerGroups} ({GAME_CONFIG.MIN_GROUP_COUNT}–{GAME_CONFIG.MAX_GROUP_COUNT})
+            </label>
+            <TextField id="groups" type="number" inputMode="numeric" value={groupCount} onChange={setGroupCount} />
+            {error && <ErrorText>{error}</ErrorText>}
+          </div>
+          <div className="mt-4 flex flex-col gap-3">
+            <PrimaryButton type="submit" disabled={!valid || busy}>
+              {busy ? "…" : t.trainerCreate}
+            </PrimaryButton>
+            {lastSession && <SecondaryButton href={`/trainer/${lastSession}`}>{t.trainerResume}</SecondaryButton>}
+          </div>
         </div>
       </form>
     </>

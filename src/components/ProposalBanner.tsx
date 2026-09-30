@@ -33,7 +33,9 @@ export function ProposalBanner({
   return (
     <div className="sticky bottom-0 z-20 -mx-5 mt-auto bg-gradient-to-b from-transparent via-night/95 to-night px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-8">
       <div className="flex flex-col gap-3 rounded-[12px] border border-teal/60 bg-teal-tint p-4 shadow-glow animate-slide-up" style={{ backgroundColor: "#1f1e29" }}>
-        <p className="text-[10px] font-medium uppercase leading-none tracking-[1px] text-teal">{t.proposedBy(proposer?.nickname ?? "?")}</p>
+        <p className="text-[10px] font-medium uppercase leading-[1.3] tracking-[1px] text-teal">
+          <span className="normal-case tracking-normal text-[12px]">{proposer?.nickname ?? "?"}</span> {t.proposes}
+        </p>
         <div className="flex items-center gap-3">
           {leading}
           <div className="min-w-0">

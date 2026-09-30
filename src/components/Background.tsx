@@ -4,11 +4,15 @@
  * Hintergrund aus dem Figma-Design der Streak Challenge. "start" ist die scharfe
  * Nachtaufnahme mit Overlay, "blur" die weichgezeichnete Variante aller anderen Screens.
  * `wide` hebt die 430-px-Begrenzung für die Trainer-/Beamer-Ansicht auf.
+ *
+ * Die Ebene ist fixiert und so hoch wie der größtmögliche Viewport (lvh), damit sie auf
+ * Android Chrome auch dann den ganzen Screen füllt, wenn die URL-Leiste ein- oder ausfährt.
+ * Auf Handybreite läuft sie über die volle Breite, ab `sm` bleibt die 430-px-Spalte.
  */
 export function Background({ variant, wide = false }: { variant: "start" | "blur"; wide?: boolean }) {
-  const width = wide ? "max-w-none" : "max-w-[430px]";
+  const width = wide ? "max-w-none" : "sm:max-w-[430px]";
   return (
-    <div aria-hidden className={`pointer-events-none fixed inset-x-0 top-0 -z-10 mx-auto h-dvh w-full overflow-hidden bg-night ${width}`}>
+    <div aria-hidden className={`pointer-events-none fixed inset-x-0 top-0 -z-10 mx-auto h-lvh min-h-dvh w-full overflow-hidden bg-night ${width}`}>
       {variant === "start" ? (
         <>
           <img alt="" src="/design/bg-start.webp" className="absolute left-[-79%] top-[-20%] h-[155%] w-[254%] max-w-none object-cover" />

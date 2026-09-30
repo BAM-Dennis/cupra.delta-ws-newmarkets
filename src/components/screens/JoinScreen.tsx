@@ -30,21 +30,21 @@ export function JoinScreen({
           if (valid && !busy) onJoin(trimmed);
         }}
       >
-        <div className="mt-[calc(14dvh-16px)]">
+        <div className="my-auto flex flex-col py-6">
           <Logo />
-        </div>
-        <div className="mt-10 flex flex-col items-center gap-[13px]">
-          <p className="text-center text-[20px] font-medium leading-none">{t.joinTitle(groupName)}</p>
-          <label htmlFor="nickname" className="mt-2 text-center text-[12px] leading-[1.2] tracking-[0.48px]">
-            {t.nickname}
-          </label>
-          <TextField id="nickname" value={nickname} onChange={setNickname} maxLength={GAME_CONFIG.NICKNAME_MAX} placeholder={t.nicknamePlaceholder} autoFocus />
-          {error && <ErrorText>{error}</ErrorText>}
-        </div>
-        <div className="mt-4">
-          <PrimaryButton type="submit" disabled={!valid || busy}>
-            {busy ? "…" : t.join}
-          </PrimaryButton>
+          <div className="mt-10 flex flex-col items-center gap-[13px]">
+            <p className="text-center text-[20px] font-medium leading-none">{t.joinTitle(groupName)}</p>
+            <label htmlFor="nickname" className="mt-2 text-center text-[12px] leading-[1.2] tracking-[0.48px]">
+              {t.nickname}
+            </label>
+            <TextField id="nickname" value={nickname} onChange={setNickname} maxLength={GAME_CONFIG.NICKNAME_MAX} placeholder={t.nicknamePlaceholder} autoFocus />
+            {error && <ErrorText>{error}</ErrorText>}
+          </div>
+          <div className="mt-4">
+            <PrimaryButton type="submit" disabled={!valid || busy}>
+              {busy ? "…" : t.join}
+            </PrimaryButton>
+          </div>
         </div>
       </form>
     </>

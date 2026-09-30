@@ -5,7 +5,7 @@
  * Platzhalter-Inhalt von SAPERED, gegroundet auf öffentlicher CUPRA-Raval-Recherche,
  * final bestätigt CUPRA. Werte auf Englisch, weil sie in der App erscheinen.
  *
- * Runden 1 und 2 (Sofia/Henrik, Mika/Familie Ruiz) sowie die Karte-Need-Zuordnung mit
+ * Runden 1 und 2 (Sofia/Henrik, Mika/The Ruiz Family) sowie die Karte-Need-Zuordnung mit
  * Treffer-Stärke sind 1:1 aus dem Seed übernommen. Runden 3 und 4 sind im Seed bewusst
  * offen ("mit CUPRA zu bauen"); hier stehen klar markierte PLATZHALTER entlang der zwei
  * im Seed vorgeschlagenen Persona-Typen (werteorientiert, Lifestyle/Outdoor), damit das
@@ -94,7 +94,7 @@ const SEED_PERSONAS: PersonaDef[] = [
   },
   {
     id: "p-ruiz",
-    name: "Familie Ruiz",
+    name: "The Ruiz Family",
     profile: "Young family, switching to electric for the first time, cautious",
     difficulty: "hard",
     intro: "We are switching to electric for the first time. It has to fit the family kit, take us on longer trips without stress, and be safe.",

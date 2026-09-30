@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { getCard } from "@/data/content";
 import { handsOf } from "@/engine/game";
 import { t } from "@/i18n/en";
 import type { GroupSnapshot } from "@/lib/api";
+import { loadRulesSeen, saveRulesSeen } from "@/lib/storage";
 import { ArgumentCard } from "../ArgumentCard";
+import { RulesPanel } from "../RulesPanel";
 import { ScreenShell } from "../ScreenShell";
 import { PrimaryButton } from "../ui";
 
@@ -17,6 +20,16 @@ export function CardsScreen({
   busy: boolean;
   onConfirm: () => void;
 }) {
+  // Regeln einmal wegklickbar; erst nach dem ersten Paint aus dem localStorage lesen (Hydration)
+  const [showRules, setShowRules] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setShowRules(!loadRulesSeen()));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  const dismissRules = () => {
+    saveRulesSeen();
+    setShowRules(false);
+  };
   const { state, members } = snapshot;
   if (state.phase.name !== "cards") return null;
   const mine = handsOf(state, meId);
@@ -32,6 +45,7 @@ export function CardsScreen({
           {mine.length > 0 ? t.cardsIntro(mine.length, state.hands.length) : t.cardsNoCards}
         </p>
       </div>
+      {showRules && <RulesPanel className="mt-4 animate-fade-up" onDismiss={dismissRules} />}
       <ul className="mt-5 flex flex-col gap-2">
         {mine.map((h) => {
           const card = getCard(h.cardId);
