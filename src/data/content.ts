@@ -1,38 +1,49 @@
 /**
  * Seed-Content für Workshop 3 "New Market Segment" nach
- * SAPERED_Workshop-App_SeedContent_WS3_NewMarketSegment.md (Stand 14.09.2026).
+ * SAPERED_Workshop-App_SeedContent_WS3_NewMarketSegment.md (Stand 01.10.2026).
  *
  * Platzhalter-Inhalt von SAPERED, gegroundet auf öffentlicher CUPRA-Raval-Recherche,
  * final bestätigt CUPRA. Werte auf Englisch, weil sie in der App erscheinen.
  *
- * Runden 1 und 2 (Sofia/Henrik, Mika/The Ruiz Family) sowie die Karte-Need-Zuordnung mit
- * Treffer-Stärke sind 1:1 aus dem Seed übernommen. Runden 3 und 4 sind im Seed bewusst
- * offen ("mit CUPRA zu bauen"); hier stehen klar markierte PLATZHALTER entlang der zwei
- * im Seed vorgeschlagenen Persona-Typen (werteorientiert, Lifestyle/Outdoor), damit das
- * 12-Karten-Deck spielbar und voll abgedeckt bleibt. Siehe PLACEHOLDER_ROUNDS unten.
+ * Aufbau: sechs Bedürfnisfelder mit je zwei Karten (zwölf Karten). Vier Personas in zwei
+ * Runden, jede mit drei Needs, jeder Need zeigt auf ein Feld. Jedes Feld wird von genau zwei
+ * Personas gebraucht, also trifft jede Karte genau zwei Personas, keine Karte ist tot.
+ * Die CardNeedMap leitet sich aus den Feldern ab: jede Karte trifft jeden Need im selben Feld,
+ * die Treffer-Stärke (voll oder Teil) ist je Paar festgelegt.
  */
-import type { ArgumentCardDef, CardNeedEntry, ContentPack, PersonaDef, RoundDef } from "@/engine/types";
+import type { ArgumentCardDef, CardNeedEntry, ContentPack, NeedFieldDef, PersonaDef, RoundDef } from "@/engine/types";
 
-/* ---------- Das 12-Karten-Deck (Delta-verankert) ---------- */
+/* ---------- Die sechs Bedürfnisfelder ---------- */
 
-const CARDS: ArgumentCardDef[] = [
-  { id: "c01", title: "Design-led challenger", text: "A design-first look: expressive lines, copper accents, stands out without shouting." },
-  { id: "c02", title: "Connected cockpit", text: "12.9-inch responsive infotainment, wireless CarPlay and Android Auto, over-the-air updates, phone as digital key." },
-  { id: "c03", title: "Smart value", text: "Premium feel, honest pricing from around 26,000 euros, strong standard equipment, attractive leasing and business rates." },
-  { id: "c04", title: "Efficient by design", text: "Around 161 Wh/km, low cost per kilometre." },
-  { id: "c05", title: "Everyday range", text: "Around 310 km real range, up to about 446 km WLTP on the larger battery." },
-  { id: "c06", title: "Charging made simple", text: "10 to 80 percent in around 24 minutes, a large European charging network, home wallbox package with installation." },
-  { id: "c07", title: "Worry-free ownership", text: "Up to 5 years warranty, service packages and an 8-year battery guarantee keep total cost predictable." },
-  { id: "c08", title: "Class-leading boot", text: "Around 441 litres, flat load floor, folding rear seats." },
-  { id: "c09", title: "Real cabin space", text: "Long 2599 mm wheelbase, genuine rear-seat room, wide door openings." },
-  { id: "c10", title: "Alive to drive", text: "Supportive driver-focused seat, instant electric torque, everyday agility." },
-  { id: "c11", title: "Conscious materials", text: "Recycled SEAQUAL yarn seats, bio-based surfaces, lower-impact production." },
-  { id: "c12", title: "Power out (V2L)", text: "Run your devices straight from the car." },
+export const NEED_FIELDS: NeedFieldDef[] = [
+  { id: "f1", label: "Value and running cost" },
+  { id: "f2", label: "Range and charging" },
+  { id: "f3", label: "Design, identity and driving character" },
+  { id: "f4", label: "Space, practicality and versatility" },
+  { id: "f5", label: "Tech and connectivity" },
+  { id: "f6", label: "Ownership, safety and responsibility" },
 ];
 
-/* ---------- Personas Runde 1 und 2 (aus dem Seed) ---------- */
+/* ---------- Das 12-Karten-Deck: zwei Karten je Feld (Delta-verankert) ---------- */
 
-const SEED_PERSONAS: PersonaDef[] = [
+const CARDS: ArgumentCardDef[] = [
+  { id: "c01", fieldId: "f1", title: "Smart value", text: "Honest pricing from around 26,000 euros, strong standard equipment, attractive leasing and business rates." },
+  { id: "c02", fieldId: "f1", title: "Efficient by design", text: "Around 161 Wh/km, low cost per kilometre." },
+  { id: "c03", fieldId: "f2", title: "Everyday range", text: "Around 310 km real range, up to about 446 km WLTP on the larger battery." },
+  { id: "c04", fieldId: "f2", title: "Charging made simple", text: "10 to 80 percent in around 24 minutes, a large European charging network, home wallbox package." },
+  { id: "c05", fieldId: "f3", title: "Design-led challenger", text: "Expressive lines, copper accents, stands out without shouting." },
+  { id: "c06", fieldId: "f3", title: "Alive to drive", text: "Instant electric torque, driver-focused seat, everyday agility." },
+  { id: "c07", fieldId: "f4", title: "Class-leading boot", text: "Around 441 litres, flat load floor, folding rear seats." },
+  { id: "c08", fieldId: "f4", title: "Real cabin space", text: "Long 2599 mm wheelbase, genuine rear-seat room, wide door openings, power out for your devices." },
+  { id: "c09", fieldId: "f5", title: "Connected cockpit", text: "12.9-inch responsive infotainment, wireless CarPlay and Android Auto." },
+  { id: "c10", fieldId: "f5", title: "Effortless everyday", text: "Over-the-air updates, phone as digital key, clear simple menus." },
+  { id: "c11", fieldId: "f6", title: "Worry-free ownership", text: "Up to 5 years warranty, 8-year battery guarantee, predictable total cost." },
+  { id: "c12", fieldId: "f6", title: "Conscious materials", text: "Recycled SEAQUAL yarn, bio-based surfaces, lower-impact production." },
+];
+
+/* ---------- Die vier Personas (zwei Runden, je leicht und schwer) ---------- */
+
+const PERSONAS: PersonaDef[] = [
   {
     id: "p-sofia",
     name: "Sofia",
@@ -41,9 +52,9 @@ const SEED_PERSONAS: PersonaDef[] = [
     difficulty: "easy",
     intro: "I have been driving a small hatchback for years. Now I want something that feels special, but I do not want to overspend.",
     needs: [
-      { id: "S1", label: "S1", text: "I want something that feels special, a real step up." },
-      { id: "S2", label: "S2", text: "It has to stay affordable. I do not want to overspend." },
-      { id: "S3", label: "S3", text: "And it has to be easy to live with day to day." },
+      { id: "S1", label: "S1", fieldId: "f1", text: "It has to be a sensible spend. I do not want to overspend." },
+      { id: "S2", label: "S2", fieldId: "f3", text: "I want something that feels special, a real step up." },
+      { id: "S3", label: "S3", fieldId: "f5", text: "And it has to be easy to live with day to day." },
     ],
     reactions: {
       full: ["Okay, that is exactly what I was hoping to hear.", "Nice, I did not expect that from a brand I barely knew."],
@@ -61,9 +72,9 @@ const SEED_PERSONAS: PersonaDef[] = [
     difficulty: "hard",
     intro: "I decide by spreadsheet. Emotions do not pay my budget. Convince me on numbers and reliability.",
     needs: [
-      { id: "H1", label: "H1", text: "Total cost of ownership has to be predictable." },
-      { id: "H2", label: "H2", text: "My drivers cover long distances. Charging downtime is a real cost." },
-      { id: "H3", label: "H3", text: "I need reliability and a warranty I can count on." },
+      { id: "H1", label: "H1", fieldId: "f1", text: "Total cost of ownership has to be predictable." },
+      { id: "H2", label: "H2", fieldId: "f2", text: "My drivers cover long distances. Charging downtime is a real cost." },
+      { id: "H3", label: "H3", fieldId: "f6", text: "I need reliability and a warranty I can count on." },
     ],
     reactions: {
       full: ["That is a number I can put in my report.", "Good. That addresses a real risk on my list."],
@@ -76,13 +87,14 @@ const SEED_PERSONAS: PersonaDef[] = [
   {
     id: "p-mika",
     name: "Mika",
+    image: "/design/personas/mika.jpg",
     profile: "22, first own car, the car is a statement",
     difficulty: "easy",
-    intro: "My first car has to look like me. It should stand out, still be affordable, and be fun to drive.",
+    intro: "My first car has to look like me. It should stand out, be fun to drive, and keep up with my life.",
     needs: [
-      { id: "M1", label: "M1", text: "It has to stand out and look sharp." },
-      { id: "M2", label: "M2", text: "It has to be affordable for a first car." },
-      { id: "M3", label: "M3", text: "I want fun and character, not just transport." },
+      { id: "M1", label: "M1", fieldId: "f3", text: "It has to stand out and be fun to drive." },
+      { id: "M2", label: "M2", fieldId: "f4", text: "I need room for my life: mates, gear, weekends." },
+      { id: "M3", label: "M3", fieldId: "f5", text: "It has to be fully connected, like my phone." },
     ],
     reactions: {
       full: ["Yes! That is what I mean.", "Okay, that is actually cool."],
@@ -95,13 +107,14 @@ const SEED_PERSONAS: PersonaDef[] = [
   {
     id: "p-ruiz",
     name: "The Ruiz Family",
+    image: "/design/personas/ruiz-family.jpg",
     profile: "Young family, switching to electric for the first time, cautious",
     difficulty: "hard",
-    intro: "We are switching to electric for the first time. It has to fit the family kit, take us on longer trips without stress, and be safe.",
+    intro: "We are switching to electric for the first time. It has to take us on longer trips without stress, fit the family kit, and be safe.",
     needs: [
-      { id: "F1", label: "F1", text: "We need space for the whole family kit." },
-      { id: "F2", label: "F2", text: "Enough real range for longer trips, without anxiety." },
-      { id: "F3", label: "F3", text: "It has to be safe and dependable." },
+      { id: "F1", label: "F1", fieldId: "f2", text: "Enough real range for longer trips, without anxiety." },
+      { id: "F2", label: "F2", fieldId: "f4", text: "We need space for the whole family kit." },
+      { id: "F3", label: "F3", fieldId: "f6", text: "It has to be safe and dependable, and a responsible choice for our kids." },
     ],
     reactions: {
       full: ["That takes a real worry off our list.", "Good, that is the kind of thing we need to hear."],
@@ -113,165 +126,63 @@ const SEED_PERSONAS: PersonaDef[] = [
   },
 ];
 
-/* ---------- Karte-Need-Zuordnung mit Treffer-Stärke (aus dem Seed) ---------- */
+/* ---------- Karte-Need-Zuordnung mit Treffer-Stärke ---------- */
+/* Jede Karte trifft beide Needs ihres Feldes. Innerhalb eines Feldes ist je Persona meist eine
+   Karte der volle Treffer und die andere der Teiltreffer (Seed, Abschnitt Wertung). Schwere
+   Personas brauchen für jeden Need einen vollen Treffer; die vollen Karten der beiden schweren
+   Personas sind disjunkt, damit auch die Wahl "schwer plus schwer" aufgeht. */
 
-const SEED_MAP: CardNeedEntry[] = [
+const CARD_NEED_MAP: CardNeedEntry[] = [
+  // Feld 1 Value und running cost: Sofia S1, Henrik H1
   { cardId: "c01", needId: "S1", strength: "full" },
-  { cardId: "c01", needId: "M1", strength: "full" },
-  { cardId: "c02", needId: "S3", strength: "full" },
-  { cardId: "c02", needId: "M3", strength: "partial" },
-  { cardId: "c03", needId: "S2", strength: "full" },
-  { cardId: "c03", needId: "H1", strength: "full" },
-  { cardId: "c03", needId: "M2", strength: "full" },
-  { cardId: "c04", needId: "S2", strength: "partial" },
-  { cardId: "c04", needId: "H1", strength: "full" },
-  { cardId: "c05", needId: "H2", strength: "partial" },
-  { cardId: "c05", needId: "F2", strength: "full" },
-  { cardId: "c06", needId: "H2", strength: "full" },
-  { cardId: "c06", needId: "F2", strength: "full" },
-  { cardId: "c07", needId: "H3", strength: "full" },
-  { cardId: "c07", needId: "H1", strength: "partial" },
-  { cardId: "c07", needId: "F3", strength: "full" },
-  { cardId: "c08", needId: "F1", strength: "full" },
-  { cardId: "c09", needId: "F1", strength: "full" },
-  { cardId: "c10", needId: "S1", strength: "partial" },
-  { cardId: "c10", needId: "M3", strength: "full" },
-  { cardId: "c11", needId: "S1", strength: "partial" },
-  { cardId: "c11", needId: "M1", strength: "partial" },
-  { cardId: "c12", needId: "M3", strength: "partial" },
+  { cardId: "c02", needId: "S1", strength: "partial" },
+  { cardId: "c01", needId: "H1", strength: "full" },
+  { cardId: "c02", needId: "H1", strength: "full" },
+  // Feld 2 Range und charging: Henrik H2, Familie Ruiz F1
+  { cardId: "c03", needId: "H2", strength: "partial" },
+  { cardId: "c04", needId: "H2", strength: "full" },
+  { cardId: "c03", needId: "F1", strength: "full" },
+  { cardId: "c04", needId: "F1", strength: "partial" },
+  // Feld 3 Design, Identität, Fahrcharakter: Sofia S2, Mika M1
+  { cardId: "c05", needId: "S2", strength: "full" },
+  { cardId: "c06", needId: "S2", strength: "partial" },
+  { cardId: "c05", needId: "M1", strength: "full" },
+  { cardId: "c06", needId: "M1", strength: "full" },
+  // Feld 4 Platz, Praxis, Vielseitigkeit: Mika M2, Familie Ruiz F2
+  { cardId: "c07", needId: "M2", strength: "partial" },
+  { cardId: "c08", needId: "M2", strength: "full" },
+  { cardId: "c07", needId: "F2", strength: "full" },
+  { cardId: "c08", needId: "F2", strength: "full" },
+  // Feld 5 Tech und Konnektivität: Sofia S3, Mika M3
+  { cardId: "c09", needId: "S3", strength: "partial" },
+  { cardId: "c10", needId: "S3", strength: "full" },
+  { cardId: "c09", needId: "M3", strength: "full" },
+  { cardId: "c10", needId: "M3", strength: "partial" },
+  // Feld 6 Eigentum, Sicherheit, Verantwortung: Henrik H3, Familie Ruiz F3
+  { cardId: "c11", needId: "H3", strength: "full" },
+  { cardId: "c12", needId: "H3", strength: "partial" },
+  { cardId: "c11", needId: "F3", strength: "full" },
+  { cardId: "c12", needId: "F3", strength: "full" },
 ];
 
-/* ---------- PLATZHALTER Runden 3 und 4 (im Seed offen, mit CUPRA zu bauen) ---------- */
-/* Typ "werteorientierte Käuferin" gibt Karte 11 ihren vollen Moment, Typ "Lifestyle/Outdoor"
-   gibt Karte 12 ihren vollen Moment. Namen, Needs und Zuordnung sind Vorschläge des Developers. */
-
-const PLACEHOLDER_PERSONAS: PersonaDef[] = [
-  {
-    id: "p-noor",
-    name: "Noor",
-    profile: "Conscious consumer, 31, buys brands that match her values (placeholder)",
-    difficulty: "easy",
-    placeholder: true,
-    intro: "I want a car I can feel good about. How it is made matters as much as how it drives.",
-    needs: [
-      { id: "V1", label: "V1", text: "Show me the car is made responsibly." },
-      { id: "V2", label: "V2", text: "I mostly drive in the city and want low running costs." },
-      { id: "V3", label: "V3", text: "It still has to feel like something I chose, not a compromise." },
-    ],
-    reactions: {
-      full: ["That is exactly the kind of thing I look for.", "Good. That matches what I care about."],
-      partial: ["That is a step in the right direction, but not the full picture.", "Okay, but I would want to know more."],
-      miss: ["That is not what I asked about.", "Hm, that does not speak to my values."],
-    },
-    convinced: "I am convinced. This feels like the right choice.",
-    notConvinced: "I am not sure the brand really means it.",
-  },
-  {
-    id: "p-weber",
-    name: "Anna Weber",
-    profile: "Sustainability lead, 47, company fleet with a CO2 target (placeholder)",
-    difficulty: "hard",
-    placeholder: true,
-    intro: "Our board set a CO2 target. I need an electric fleet that is efficient, defensible and does not hurt our budget.",
-    needs: [
-      { id: "W1", label: "W1", text: "I need efficiency per kilometre I can report." },
-      { id: "W2", label: "W2", text: "Materials and production must hold up to scrutiny." },
-      { id: "W3", label: "W3", text: "Cost over the lease period has to be predictable." },
-    ],
-    reactions: {
-      full: ["That goes straight into my report.", "Good. That is defensible in front of the board."],
-      partial: ["Useful, but I need harder facts.", "That helps, though it does not close the point."],
-      miss: ["That is not relevant to our target.", "I cannot report that."],
-    },
-    convinced: "Send me the fleet data pack. We will run a pilot.",
-    notConvinced: "Not enough evidence for the board.",
-  },
-  {
-    id: "p-jonas",
-    name: "Jonas",
-    profile: "Weekend adventurer, 36, surfboards and camping gear (placeholder)",
-    difficulty: "easy",
-    placeholder: true,
-    intro: "Weekdays it is my commute, weekends it is my base camp.",
-    needs: [
-      { id: "L1", label: "L1", text: "I want to power my gear off-grid." },
-      { id: "L2", label: "L2", text: "Boards, tent and two friends have to fit." },
-      { id: "L3", label: "L3", text: "And it should be fun on a coastal road." },
-    ],
-    reactions: {
-      full: ["Now we are talking!", "That is exactly my weekend."],
-      partial: ["Nice, but not the thing I really need.", "Okay, that is a bonus, not the answer."],
-      miss: ["That does not help me at the beach.", "Not really my problem."],
-    },
-    convinced: "Sold. When can I take it to the coast?",
-    notConvinced: "Cool car, but I am not sure it fits my weekends.",
-  },
-  {
-    id: "p-lea",
-    name: "Lea",
-    profile: "Outdoor guide, 40, runs a small business, drives clients to remote spots (placeholder)",
-    difficulty: "hard",
-    placeholder: true,
-    intro: "My car is my office and my toolbox. It has to work far from a charger, carry gear and people, and never let me down.",
-    needs: [
-      { id: "O1", label: "O1", text: "Real range and fast charging far from the city." },
-      { id: "O2", label: "O2", text: "Power for my equipment on site." },
-      { id: "O3", label: "O3", text: "Reliability I can plan a business on." },
-    ],
-    reactions: {
-      full: ["That works for my routes.", "Good. That is something I can plan with."],
-      partial: ["That helps a bit, but out there it has to be certain.", "Partly. I need more than that."],
-      miss: ["That does not help me on a mountain road.", "Not relevant for my work."],
-    },
-    convinced: "Alright. Let us talk about a business lease.",
-    notConvinced: "Too many open questions for my business.",
-  },
-];
-
-const PLACEHOLDER_MAP: CardNeedEntry[] = [
-  { cardId: "c11", needId: "V1", strength: "full" },
-  { cardId: "c04", needId: "V1", strength: "partial" },
-  { cardId: "c04", needId: "V2", strength: "full" },
-  { cardId: "c03", needId: "V2", strength: "partial" },
-  { cardId: "c06", needId: "V2", strength: "partial" },
-  { cardId: "c01", needId: "V3", strength: "full" },
-  { cardId: "c10", needId: "V3", strength: "partial" },
-  { cardId: "c04", needId: "W1", strength: "full" },
-  { cardId: "c05", needId: "W1", strength: "partial" },
-  { cardId: "c11", needId: "W2", strength: "full" },
-  { cardId: "c07", needId: "W3", strength: "full" },
-  { cardId: "c03", needId: "W3", strength: "partial" },
-  { cardId: "c04", needId: "W3", strength: "partial" },
-  { cardId: "c12", needId: "L1", strength: "full" },
-  { cardId: "c08", needId: "L2", strength: "full" },
-  { cardId: "c09", needId: "L2", strength: "full" },
-  { cardId: "c10", needId: "L3", strength: "full" },
-  { cardId: "c01", needId: "L3", strength: "partial" },
-  { cardId: "c05", needId: "O1", strength: "full" },
-  { cardId: "c06", needId: "O1", strength: "full" },
-  { cardId: "c12", needId: "O2", strength: "full" },
-  { cardId: "c07", needId: "O3", strength: "partial" },
-  { cardId: "c04", needId: "O3", strength: "partial" },
-];
-
-/** Runden: 1 und 2 aus dem Seed, 3 und 4 Platzhalter. Alle Gruppen treffen dieselben Paare. */
+/** Zwei Runden, je eine leichte und eine schwere Persona. Alle Gruppen treffen dieselben Paare. */
 export const ROUNDS: RoundDef[] = [
   { index: 0, easyPersonaId: "p-sofia", hardPersonaId: "p-henrik" },
   { index: 1, easyPersonaId: "p-mika", hardPersonaId: "p-ruiz" },
-  { index: 2, easyPersonaId: "p-noor", hardPersonaId: "p-weber" },
-  { index: 3, easyPersonaId: "p-jonas", hardPersonaId: "p-lea" },
 ];
 
 export const CONTENT: ContentPack = {
+  fields: NEED_FIELDS,
   cards: CARDS,
-  personas: [...SEED_PERSONAS, ...PLACEHOLDER_PERSONAS],
-  cardNeedMap: [...SEED_MAP, ...PLACEHOLDER_MAP],
-  // Spezifische geskriptete Reaktionen für die Timing-Pivots des Seeds (Beispiele, tbd)
+  personas: PERSONAS,
+  cardNeedMap: CARD_NEED_MAP,
+  // Spezifische geskriptete Reaktionen für einzelne Need-Karte-Paare (Beispiele, tbd)
   scriptedReactions: {
-    "H1:c03": "From around 26,000 euros with business rates? That changes my cost per car. Go on.",
-    "H1:c07": "Five years warranty and an eight-year battery guarantee. That is a line item I can defend.",
-    "F3:c07": "An eight-year battery guarantee. Okay, that is the reassurance we were looking for.",
-    "F1:c08": "441 litres and a flat floor? The buggy, the bags and the dog. That works.",
+    "H1:c01": "From around 26,000 euros with business rates? That changes my cost per car. Go on.",
+    "H3:c11": "Five years warranty and an eight-year battery guarantee. That is a line item I can defend.",
+    "F3:c11": "An eight-year battery guarantee. Okay, that is the reassurance we were looking for.",
+    "F2:c07": "441 litres and a flat floor? The buggy, the bags and the dog. That works.",
+    "M1:c05": "Copper accents? Okay, that is a car people will ask me about.",
   },
 };
 

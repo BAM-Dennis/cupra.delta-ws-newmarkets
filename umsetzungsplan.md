@@ -46,8 +46,7 @@ Der Prototyp ist bewusst so gebaut, dass Phase 1 bis 3 darauf aufsetzen und nich
 | Anwesenheit | Mitglied zählt zum Konsens, wenn Lebenszeichen jünger als 45 s | ein gesperrtes Handy blockiert das Team nicht |
 | Identität | UUID im localStorage, Nickname je Team, kein Login | wie Streak Challenge; wird in Phase 3 durch die Plattform-Identität ersetzt |
 | Trainer-Rechte | Token bei Session-Erstellung, im Browser gespeichert | reicht für Pilot; Plattform-Rolle in Phase 3 |
-| Inhalt | Seed-Content von SAPERED in `src/data/content.ts`: 12 Delta-verankerte Karten, Runden 1 und 2, explizite Karte-Need-Zuordnung mit Treffer-Stärke | Balance-Regel „volle Abdeckung“ per Test prüfbar |
-| Runden 3 und 4 | Platzhalter-Personas (werteorientiert, Lifestyle/Outdoor) nach den Typen aus dem Seed, im Code als `placeholder` markiert | Deck bleibt spielbar und voll abgedeckt; Inhalte werden mit CUPRA ausdefiniert |
+| Inhalt | Seed-Content von SAPERED in `src/data/content.ts`: 6 Bedürfnisfelder mit je 2 Karten, 4 Personas in 2 Runden, Karte-Need-Zuordnung aus den Feldern abgeleitet mit Treffer-Stärke je Paar | Balance-Regeln (jedes Feld von genau zwei Personas gebraucht, jede Karte trifft genau zwei Personas, jede Persona-Kombination überzeugbar) per Test prüfbar |
 | Treffer | abgestuft: voll, Teil, kein Treffer; Stärke steht in der CardNeedMap | bestätigter Änderungsposten aus dem Seed-Content |
 
 ### Datenmodell (umgesetzt)
@@ -79,8 +78,8 @@ Alle Werte in `src/engine/config.ts`, ohne Codeänderung anpassbar:
 |---|---|---|
 | Deckgröße | 12 | tbd |
 | Needs (Argumente) pro Persona | 3 | tbd, 3 bis 5 |
-| Runden | 4 (Deck 12 / 3 Needs) | mehrere |
-| Persona überzeugt ab | 2 von 3 Treffern (voll oder Teil zählt) | tbd, 1 von 3 reicht nicht |
+| Runden | 2 (Seed-Content 01.10.2026: 4 Personas, Deck 12 bleibt größer als nötig) | mehrere |
+| Persona überzeugt ab | leicht: 2 von 3 Treffern (Teil zählt); schwer: 3 von 3 volle Treffer (Kundenfeedback) | tbd, 1 von 3 reicht nicht |
 | Punkte pro Treffer | voll 10, Teil 5 (abgestuft, aus Seed-Content) | „passende Argumente geben Punkte“ |
 | Bonus überzeugte Persona | leicht 20, schwer 50 | nach Schwierigkeit skaliert |
 | Einzelpunkte | volle Teampunkte je Mitglied plus 3 je eigener Treffer-Karte | Anteil plus kleiner Bonus |

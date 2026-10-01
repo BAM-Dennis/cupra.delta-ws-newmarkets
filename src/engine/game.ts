@@ -8,6 +8,7 @@ import type {
   Action,
   ContentPack,
   Context,
+  Difficulty,
   GroupState,
   Hand,
   HitStrength,
@@ -63,6 +64,17 @@ export function matchStrength(content: ContentPack, cardId: string, needId: stri
 
 export function cardMatchesNeed(content: ContentPack, cardId: string, needId: string): boolean {
   return matchStrength(content, cardId, needId) !== "none";
+}
+
+/** Zählt der Treffer für die Überzeug-Regel der Persona? Schwere Personas verlangen volle Treffer. */
+export function hitQualifies(difficulty: Difficulty, strength: HitStrength): boolean {
+  if (strength === "none") return false;
+  return GAME_CONFIG.CONVINCE_RULE[difficulty].minStrength === "partial" || strength === "full";
+}
+
+/** Anzahl zählender Treffer, ab der die Persona überzeugt ist. */
+export function hitsRequired(difficulty: Difficulty): number {
+  return GAME_CONFIG.CONVINCE_RULE[difficulty].hitsRequired;
 }
 
 /** Konsens erreicht, wenn jedes anwesende Mitglied bestätigt hat (D2). */
@@ -192,6 +204,7 @@ function resolveIfComplete(state: GroupState, ctx: Context): GroupState {
         personaId: proposal.value,
         needIndex: 0,
         hits: 0,
+        qualifyingHits: 0,
         proposal: null,
         lastMove: null,
       },
@@ -229,6 +242,7 @@ function playCard(state: GroupState, cardId: string, contributorId: string, ctx:
   if (hit) memberPoints[contributorId] = (memberPoints[contributorId] ?? 0) + GAME_CONFIG.CONTRIBUTOR_BONUS;
 
   const hits = state.phase.hits + (hit ? 1 : 0);
+  const qualifyingHits = state.phase.qualifyingHits + (hitQualifies(persona.difficulty, strength) ? 1 : 0);
   const needIndex = state.phase.needIndex + 1;
   const next: GroupState = {
     ...state,
@@ -239,11 +253,11 @@ function playCard(state: GroupState, cardId: string, contributorId: string, ctx:
   };
   const deckEmpty = hands.every((h) => h.state === "played");
   if (needIndex >= persona.needs.length || deckEmpty) {
-    return finishPersona(next, persona, hits, needIndex, ctx);
+    return finishPersona(next, persona, hits, qualifyingHits, needIndex, ctx);
   }
   return {
     ...next,
-    phase: { ...state.phase, needIndex, hits, proposal: null, lastMove: move },
+    phase: { ...state.phase, needIndex, hits, qualifyingHits, proposal: null, lastMove: move },
   };
 }
 
@@ -254,10 +268,13 @@ function reactionFor(ctx: Context, persona: PersonaDef, needId: string, cardId: 
   return pool[Math.floor(ctx.rng() * pool.length)] ?? "";
 }
 
-/** D6/E2 – Persona ist überzeugt oder nicht; Bonus nach Schwierigkeit an Gruppe und Mitglieder. */
-function finishPersona(state: GroupState, persona: PersonaDef, hits: number, needsPlayed: number, ctx: Context): GroupState {
+/**
+ * D6/E2 – Persona ist überzeugt oder nicht; Bonus nach Schwierigkeit an Gruppe und Mitglieder.
+ * Überzeug-Regel: schwer = alle drei Needs voll getroffen, leicht = zwei von drei, Teil zählt.
+ */
+function finishPersona(state: GroupState, persona: PersonaDef, hits: number, qualifyingHits: number, needsPlayed: number, ctx: Context): GroupState {
   if (state.phase.name !== "dialog") throw new GameError("WRONG_PHASE");
-  const convinced = hits >= GAME_CONFIG.CONVINCE_HITS_REQUIRED;
+  const convinced = qualifyingHits >= hitsRequired(persona.difficulty);
   const bonusPoints = convinced ? GAME_CONFIG.CONVINCED_BONUS[persona.difficulty] : 0;
   const memberPoints = { ...state.memberPoints };
   if (bonusPoints > 0) {
@@ -268,6 +285,7 @@ function finishPersona(state: GroupState, persona: PersonaDef, hits: number, nee
     personaId: persona.id,
     difficulty: persona.difficulty,
     hits,
+    qualifyingHits,
     needsPlayed,
     convinced,
     bonusPoints,
@@ -282,7 +300,7 @@ function finishPersona(state: GroupState, persona: PersonaDef, hits: number, nee
   };
 }
 
-/** E1 – Weiter zur nächsten Runde oder Spielende, wenn das Deck aufgebraucht ist. */
+/** E1 – Weiter zur nächsten Runde; Spielende, wenn alle Runden gespielt sind oder das Deck leer ist. */
 function continueAfterPersona(state: GroupState, ctx: Context): GroupState {
   if (state.phase.name !== "persona_result") throw new GameError("WRONG_PHASE");
   const nextRound = state.phase.roundIndex + 1;

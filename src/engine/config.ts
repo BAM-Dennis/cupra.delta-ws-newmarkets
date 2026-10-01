@@ -11,8 +11,15 @@ export const GAME_CONFIG = {
   DECK_SIZE: 12,
   /** D6 – Argumente pro Persona-Dialog = Anzahl der Needs einer Persona (tbd, 3 bis 5) */
   NEEDS_PER_PERSONA: 3,
-  /** Ab so vielen Treffern (voll oder Teil) gilt die Persona als überzeugt (tbd; 1 von 3 reicht nicht) */
-  CONVINCE_HITS_REQUIRED: 2,
+  /**
+   * Überzeug-Regel je Schwierigkeit (Kundenfeedback 01.10.2026): eine schwere Persona braucht
+   * drei richtige Argumente, und nur volle Treffer zählen; einer leichten reichen zwei von drei,
+   * Teiltreffer zählen mit.
+   */
+  CONVINCE_RULE: {
+    easy: { hitsRequired: 2, minStrength: "partial" },
+    hard: { hitsRequired: 3, minStrength: "full" },
+  } as const satisfies Record<"easy" | "hard", { hitsRequired: number; minStrength: "full" | "partial" }>,
   /** D4 – Punkte je Treffer, abgestuft nach Stärke (Seed-Content: voll 10, Teil 5, tbd) */
   HIT_POINTS: { full: 10, partial: 5 } as const,
   /** E2 – Bonus je überzeugter Persona, nach Schwierigkeit skaliert */

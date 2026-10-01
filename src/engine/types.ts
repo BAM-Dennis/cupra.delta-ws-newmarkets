@@ -5,8 +5,16 @@
 
 export type Difficulty = "easy" | "hard";
 
+/** Bedürfnisfeld (Seed-Content): jede Karte gehört zu einem Feld, jeder Need zeigt auf ein Feld. */
+export interface NeedFieldDef {
+  id: string;
+  label: string;
+}
+
 export interface ArgumentCardDef {
   id: string;
+  /** Bedürfnisfeld, das die Karte bedient */
+  fieldId: string;
   title: string;
   text: string;
 }
@@ -15,6 +23,8 @@ export interface NeedDef {
   id: string;
   /** Kurzlabel aus dem Seed-Content, z. B. "S1" */
   label: string;
+  /** Bedürfnisfeld, auf das der Need zeigt */
+  fieldId: string;
   text: string;
 }
 
@@ -40,7 +50,7 @@ export interface PersonaDef {
   reactions: { full: string[]; partial: string[]; miss: string[] };
   convinced: string;
   notConvinced: string;
-  /** Platzhalter, der noch mit CUPRA ausdefiniert wird (Runden 3 und 4 im Seed-Content) */
+  /** Platzhalter-Persona, die noch mit CUPRA ausdefiniert wird */
   placeholder?: boolean;
   /** Portrait unter public/, z. B. "/design/personas/sofia.jpg"; ohne Bild zeigt die App eine Initiale */
   image?: string;
@@ -48,6 +58,7 @@ export interface PersonaDef {
 
 /** Inhaltspaket: Karten, Personas und die Karte-Need-Zuordnung (Abschnitt 7 des Konzepts). */
 export interface ContentPack {
+  fields: NeedFieldDef[];
   cards: ArgumentCardDef[];
   personas: PersonaDef[];
   /** CardNeedMap – gültige Paare mit Treffer-Stärke, many-to-many */
@@ -101,7 +112,10 @@ export interface PersonaOutcome {
   roundIndex: number;
   personaId: string;
   difficulty: Difficulty;
+  /** Treffer insgesamt (voll oder Teil) */
   hits: number;
+  /** Treffer, die für die Überzeug-Regel der Schwierigkeit zählen (schwer: nur volle) */
+  qualifyingHits: number;
   needsPlayed: number;
   convinced: boolean;
   /** Bonus für die überzeugte Persona (E2), ohne die Treffer-Punkte */
@@ -117,7 +131,10 @@ export type Phase =
       roundIndex: number;
       personaId: string;
       needIndex: number;
+      /** Treffer insgesamt (voll oder Teil) */
       hits: number;
+      /** Treffer, die für die Überzeug-Regel zählen (schwer: nur volle) */
+      qualifyingHits: number;
       proposal: Proposal | null;
       lastMove: Move | null;
     }
