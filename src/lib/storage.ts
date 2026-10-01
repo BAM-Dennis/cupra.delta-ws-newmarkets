@@ -52,6 +52,17 @@ export function saveNickname(nickname: string) {
   write(KEYS.nickname, nickname);
 }
 
+/**
+ * "Start over" am Spielende: Identität und Nickname auf diesem Gerät verwerfen. Beim nächsten
+ * Laden entsteht eine neue User-ID, das Gerät ist kein Mitglied mehr und landet im Beitritt.
+ * Der Gruppenzustand auf dem Server bleibt unberührt.
+ */
+export function clearStoredUser() {
+  write(KEYS.userId, null);
+  write(KEYS.nickname, null);
+  write(KEYS.rulesSeen, null);
+}
+
 export function saveTrainerToken(sessionId: string, token: string) {
   write(KEYS.trainerToken(sessionId), token);
   write(KEYS.lastSession, sessionId);

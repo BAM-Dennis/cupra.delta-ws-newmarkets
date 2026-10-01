@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Action } from "@/engine/types";
 import { t } from "@/i18n/en";
 import { ApiError, describeError, joinGroup, sendAction } from "@/lib/api";
-import { loadStoredUser, saveNickname, type StoredUser } from "@/lib/storage";
+import { clearStoredUser, loadStoredUser, saveNickname, type StoredUser } from "@/lib/storage";
 import { useGroupState } from "@/lib/useGroupState";
 import { Background } from "./Background";
 import { CardsScreen } from "./screens/CardsScreen";
@@ -57,6 +57,12 @@ export function GroupGame({ code }: { code: string }) {
     },
     [code, user, apply],
   );
+
+  /** Spielende: lokale Identität verwerfen und frisch laden, der Server bleibt unberührt. */
+  const handleStartOver = useCallback(() => {
+    clearStoredUser();
+    window.location.reload();
+  }, []);
 
   const act: Act = useCallback(
     async (action) => {
@@ -118,7 +124,7 @@ export function GroupGame({ code }: { code: string }) {
       screen = <PersonaResultScreen snapshot={snapshot} meId={meId} busy={busy} act={act} />;
       break;
     case "finished":
-      screen = <FinishedScreen snapshot={snapshot} meId={meId} />;
+      screen = <FinishedScreen snapshot={snapshot} meId={meId} onStartOver={handleStartOver} />;
       break;
   }
 
