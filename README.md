@@ -20,7 +20,7 @@ npm run dev                    # http://localhost:3000
 2. Die Trainer-Seite zeigt pro Team einen QR-Code mit Link auf `/join/<CODE>`. Teilnehmer scannen, geben ihren Namen ein und landen in der Lobby. Alternativ den 6-stelligen Code auf `/` eintippen.
 3. „Start game“: leere Teams werden entfernt, jedes Team erhält dasselbe Deck (12 Delta-verankerte Karten in 6 Bedürfnisfeldern, je 2 Karten), verdeckt auf die Mitglieder verteilt.
 4. Teilnehmer bestätigen ihre Karten, wählen pro Runde gemeinsam eine leichte oder schwere Persona und spielen pro Need eine Karte. Ein Mitglied schlägt vor, alle anderen anwesenden Mitglieder bestätigen.
-5. Treffer sind abgestuft (voll +10, Teil +5, kein Treffer 0). Eine leichte Persona ist mit 2 von 3 Treffern überzeugt (Teiltreffer zählen, +20), eine schwere nur mit 3 vollen Treffern (+50). Nach 2 Runden ist das Spiel vorbei; der Endscreen zeigt beide Leaderboards und bietet „Start over“ für das Gerät an. Trainer-Seite zeigt Team- und Einzel-Leaderboard live.
+5. Treffer sind abgestuft (voll +10, Teil +5, kein Treffer 0). Eine leichte Persona ist mit 2 von 3 Treffern überzeugt (Teiltreffer zählen, +20), eine schwere nur mit 3 vollen Treffern (+50). Nach 2 Runden ist das Spiel vorbei; der Endscreen zeigt beide Leaderboards und sagt, dass der Trainer die nächsten Schritte vorgibt. Trainer-Seite zeigt Team- und Einzel-Leaderboard live.
 
 Inhalt nach dem Seed-Content von SAPERED (Stand 01.10.2026): 4 Personas in 2 Runden (Sofia/Henrik, Mika/The Ruiz Family) mit je 3 Needs, jeder Need zeigt auf eines der 6 Bedürfnisfelder. Jedes Feld wird von genau zwei Personas gebraucht, also trifft jede Karte genau zwei Personas. Alle vier Personas haben Portraits unter `public/design/personas/`.
 

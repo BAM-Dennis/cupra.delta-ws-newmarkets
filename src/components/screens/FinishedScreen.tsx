@@ -6,13 +6,13 @@ import { t } from "@/i18n/en";
 import { fetchSession, type GroupSnapshot, type SessionOverview } from "@/lib/api";
 import { Leaderboards } from "../Leaderboards";
 import { ScreenShell } from "../ScreenShell";
-import { SecondaryButton, StatTile } from "../ui";
+import { StatTile } from "../ui";
 
 /**
  * E1/F1/F2 – Spielende der Gruppe mit beiden Leaderboards (Polling, andere Gruppen spielen ggf.
- * noch). Sagt klar, dass das Spiel vorbei ist, und bietet "Start over" für dieses Gerät an.
+ * noch). Sagt klar, dass das Spiel vorbei ist und der Trainer die nächsten Schritte vorgibt.
  */
-export function FinishedScreen({ snapshot, meId, onStartOver }: { snapshot: GroupSnapshot; meId: string; onStartOver: () => void }) {
+export function FinishedScreen({ snapshot, meId }: { snapshot: GroupSnapshot; meId: string }) {
   const [overview, setOverview] = useState<SessionOverview | null>(null);
   const sessionId = snapshot.group.sessionId;
 
@@ -56,10 +56,6 @@ export function FinishedScreen({ snapshot, meId, onStartOver }: { snapshot: Grou
         ) : (
           <p className="py-6 text-center text-[14px] text-white/50">{t.loading}</p>
         )}
-      </div>
-      <div className="mt-auto flex flex-col gap-2 pb-2 pt-8">
-        <SecondaryButton onClick={onStartOver}>{t.startOver}</SecondaryButton>
-        <p className="text-center text-[12px] leading-[1.3] text-white/50">{t.startOverHint}</p>
       </div>
     </ScreenShell>
   );

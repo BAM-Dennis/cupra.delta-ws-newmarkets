@@ -66,8 +66,6 @@ export const t = {
   // Finished
   finishedTitle: "Game over",
   finishedText: "You have finished the game. Wait for further instructions by your trainer.",
-  startOver: "Start over",
-  startOverHint: "Leaves this team on this device and returns to the join screen.",
   yourPoints: "Your points",
   personasConvinced: "Personas convinced",
   teamLeaderboard: "Team leaderboard",
