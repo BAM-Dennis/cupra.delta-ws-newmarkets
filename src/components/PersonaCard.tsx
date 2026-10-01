@@ -7,7 +7,7 @@ import { Badge } from "./ui";
 
 /**
  * Persona-Karte für die gemeinsame Wahl (C1): großes Portrait oben, darunter Name, Profil
- * und Zitat. Schwierigkeit und Punktwert offen sichtbar. Ohne Foto erhält die Karte einen
+ * und Zitat. Schwierigkeit, Punktwert und Überzeug-Regel offen sichtbar. Ohne Foto erhält die Karte einen
  * gleich aufgebauten Kopf mit dem Initialen-Avatar, damit nichts unfertig wirkt.
  */
 export function PersonaCard({
@@ -29,6 +29,9 @@ export function PersonaCard({
       <span className="text-[12px] leading-none text-white/60 tabular-nums">{t.worth(GAME_CONFIG.CONVINCED_BONUS[persona.difficulty])}</span>
     </div>
   );
+  const rule = (
+    <p className={`text-[12px] leading-[1.3] ${hard ? "text-copper" : "text-teal"}`}>{t.convinceRule[persona.difficulty]}</p>
+  );
   return (
     <div className={`flex flex-col overflow-hidden rounded-[12px] border backdrop-blur-[10px] ${frame}`}>
       {persona.image ? (
@@ -47,6 +50,7 @@ export function PersonaCard({
         <div>
           <p className="text-[24px] font-medium leading-none">{persona.name}</p>
           <p className="mt-1 text-[13px] leading-[1.3] text-white/60">{persona.profile}</p>
+          <div className="mt-2">{rule}</div>
         </div>
         <p className="text-[14px] leading-[1.35] text-white/85">“{persona.intro}”</p>
         {onPropose && (

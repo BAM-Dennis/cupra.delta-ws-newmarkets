@@ -8,7 +8,7 @@ import { ScreenShell } from "../ScreenShell";
 import { Badge, PrimaryButton, StatTile } from "../ui";
 import type { Act } from "../GroupGame";
 
-/** D6/E2 – Persona überzeugt oder nicht, Bonus nach Schwierigkeit. */
+/** D6/E2 – Persona überzeugt oder nicht, Bonus nach Schwierigkeit. Schwere Personas zählen nur volle Treffer. */
 export function PersonaResultScreen({ snapshot, meId, busy, act }: { snapshot: GroupSnapshot; meId: string; busy: boolean; act: Act }) {
   const { state, members, session } = snapshot;
   if (state.phase.name !== "persona_result") return null;
@@ -25,13 +25,15 @@ export function PersonaResultScreen({ snapshot, meId, busy, act }: { snapshot: G
         </Badge>
         <div className="text-center">
           <p className="text-[32px] font-medium leading-none">{persona.name}</p>
-          <p className="mt-2 text-[14px] text-white/60">{t.hitsOf(outcome.hits, outcome.needsPlayed)}</p>
+          <p className="mt-2 text-[14px] text-white/60">
+            {outcome.difficulty === "hard" ? t.strongHitsOf(outcome.qualifyingHits, outcome.needsPlayed) : t.hitsOf(outcome.hits, outcome.needsPlayed)}
+          </p>
         </div>
         <p className="max-w-[300px] text-center text-[16px] italic leading-[1.35] text-white/85">
           “{outcome.convinced ? persona.convinced : persona.notConvinced}”
         </p>
         <div className="flex w-full gap-2">
-          <StatTile label={t.hits}>{`${outcome.hits}/${outcome.needsPlayed}`}</StatTile>
+          <StatTile label={t.hits}>{`${outcome.qualifyingHits}/${outcome.needsPlayed}`}</StatTile>
           <StatTile label={t.bonus(outcome.bonusPoints).replace(/^\+\d+ /, "")}>{`+${outcome.bonusPoints}`}</StatTile>
           <StatTile label={t.teamScore} variant="you">{state.score}</StatTile>
         </div>
